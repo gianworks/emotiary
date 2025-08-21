@@ -65,6 +65,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        forceMaterialTransparency: true,
         title: Text("New Entry", style: TextStyle(fontWeight: FontWeight.w600)),
         actions: [
           Padding(
