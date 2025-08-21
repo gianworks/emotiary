@@ -9,6 +9,9 @@ class NewEntryScreen extends StatefulWidget {
 
 class _NewEntryScreenState extends State<NewEntryScreen> {
   final PageController _pageController = PageController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
+
   final Map<String, String> _moods = {
     "😄": "Happy",
     "😊": "Content",
@@ -26,6 +29,34 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
     );
   }
 
+  Future<void> _selectDate() async {
+    DateTime? dateTime = await showDatePicker(
+      context: context, 
+      initialDate: DateTime.now(), 
+      firstDate: DateTime(2000), 
+      lastDate: DateTime(2100));
+
+    if (dateTime == null || !mounted) return;
+
+    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
+    final String formattedDateTime = localizations.formatFullDate(dateTime);
+
+    setState(() => _dateController.text = formattedDateTime);
+  }
+
+  Future<void> _selectTime() async {
+    TimeOfDay? timeOfDay = await showTimePicker(
+      context: context, 
+      initialTime: TimeOfDay.now());
+
+    if (timeOfDay == null || !mounted) return;
+
+    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
+    final String formattedTimeOfDay = localizations.formatTimeOfDay(timeOfDay);
+
+    setState(() => _timeController.text = formattedTimeOfDay);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,13 +68,14 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
         controller: _pageController,
         scrollDirection: Axis.vertical,
         children: <Widget> [
-          Column(
-            children: <Widget> [
-              SizedBox(height: 250),
-              Text("How are you feeling?", style: TextStyle(fontSize: 23)),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                child: Row(
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: Column(
+              spacing: 10,
+              children: <Widget> [
+                SizedBox(height: 250),
+                Text("How are you feeling?", style: TextStyle(fontSize: 23)),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: _moods.keys.map((emoji) {
                     return GestureDetector(
@@ -56,17 +88,50 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                     );
                   }).toList(),
                 ),
-              ),
-              if (_selectedMood.isNotEmpty) ...[
-                Text("${_moods[_selectedMood]}", style: TextStyle(fontSize: 23)),
+                if (_selectedMood.isNotEmpty) ...[
+                  Text("${_moods[_selectedMood]}", style: TextStyle(fontSize: 23)),
+                  SizedBox(height: 150),
+                  TextButton(
+                    onPressed: _nextPage, 
+                    child: Text("V", style: TextStyle(fontSize: 20, color: Color.fromARGB(130, 0, 0, 0)))
+                  )
+                ]
+              ],
+            ),
+          ),
+
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 40),
+            child: Column(
+              spacing: 10,
+              children: <Widget> [
                 SizedBox(height: 200),
-                TextButton(
-                  onPressed: _nextPage, 
-                  child: Text("V", style: TextStyle(fontSize: 20, color: Color.fromARGB(130, 0, 0, 0)))
-                )
-              ]
-            ],
-          )
+                Text("Select date and time", style: TextStyle(fontSize: 23)),
+                TextField(
+                  controller: _dateController,
+                  readOnly: true,
+                  enableInteractiveSelection: false,
+                  decoration: InputDecoration(labelText: "Date", icon: Icon(Icons.date_range)),
+                  onTap: _selectDate,
+                ),
+                TextField(
+                  controller: _timeController,
+                  readOnly: true,
+                  enableInteractiveSelection: false,
+                  decoration: InputDecoration(labelText: "Time", icon: Icon(Icons.timelapse)),
+                  onTap: _selectTime,
+                ),
+                if (_dateController.text.isNotEmpty && _timeController.text.isNotEmpty) ...[
+                  SizedBox(height: 200),
+                  TextButton(
+                    onPressed: _nextPage, 
+                    child: Text("V", style: TextStyle(fontSize: 20, color: Color.fromARGB(130, 0, 0, 0)))
+                  )
+                ]
+              ],
+            )
+          ),
+
         ],
       )
     );
