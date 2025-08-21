@@ -21,9 +21,7 @@ class PreferencesService {
 
   static const String _entriesData = "entries_data";
 
-  Future<void> addEntry(Map<String, String> entryDetails) async {
-    final Map<String, String> entry = entryDetails;
-
+  Future<void> addEntry(Map<String, String> entry) async {
     final String? entriesData = _prefs?.getString(_entriesData);
     List<Map> entries = entriesData != null ? jsonDecode(entriesData) : [];
     entries.add(entry);
