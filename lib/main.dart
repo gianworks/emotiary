@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:emotiary/Screens/home_screen.dart';
+import 'package:emotiary/Services/preferences_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await PreferencesService.init();
   runApp(const MyApp());
 }
 
