@@ -66,12 +66,21 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text("New Entry", style: TextStyle(fontWeight: FontWeight.w600)),
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 15),
+            child: TextButton(
+              onPressed: () {}, 
+              child: Text("Save", style: TextStyle(fontSize: 21, color: Color.fromARGB(255, 66, 139, 223)))
+            ),
+          )
+        ],
       ),
       body: PageView(
         controller: _pageController,
         scrollDirection: Axis.vertical,
         children: <Widget> [
-          
+
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 15),
             child: Column(
