@@ -1,3 +1,4 @@
+import 'package:emotiary/Services/preferences_service.dart';
 import 'package:flutter/material.dart';
 
 class NewEntryScreen extends StatefulWidget {
@@ -60,6 +61,38 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
     setState(() => _timeController.text = formattedTimeOfDay);
   }
 
+  Future<void> _saveEntry() async {
+    if (_selectedMood.isEmpty || _dateController.text.trim().isEmpty ||
+      _timeController.text.trim().isEmpty || _titleController.text.trim().isEmpty ||
+      _bodyController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please fill out all fields before saving."))
+      );
+      return;
+    }
+
+    final Map<String, String> entry = {
+      "emoji": _selectedMood,
+      "mood": _moods[_selectedMood] ?? "",
+      "date": _dateController.text,
+      "time": _timeController.text,
+      "title": _titleController.text,
+      "body": _bodyController.text
+    };
+
+    await PreferencesService().addEntry(entry);
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Entry saved successfully!"))
+    );
+
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +104,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
           Padding(
             padding: EdgeInsets.only(right: 15),
             child: TextButton(
-              onPressed: () {}, 
+              onPressed: _saveEntry, 
               child: Text("Save", style: TextStyle(fontSize: 21, color: Color.fromARGB(255, 66, 139, 223)))
             ),
           )
