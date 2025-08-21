@@ -8,9 +8,12 @@ class NewEntryScreen extends StatefulWidget {
 }
 
 class _NewEntryScreenState extends State<NewEntryScreen> {
+
   final PageController _pageController = PageController();
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _bodyController = TextEditingController();
 
   final Map<String, String> _moods = {
     "😄": "Happy",
@@ -68,6 +71,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
         controller: _pageController,
         scrollDirection: Axis.vertical,
         children: <Widget> [
+          
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 15),
             child: Column(
@@ -131,6 +135,37 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
               ],
             )
           ),
+
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child:  Column(
+              spacing: 30,
+              children: <Widget> [
+                SizedBox(height: 0),
+                TextField(
+                  controller: _titleController,
+                  decoration: InputDecoration(
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                    labelText: "Title"
+                  ),
+                ),
+                SizedBox(
+                  height: 600,
+                  child: Expanded(
+                    child: TextField(
+                      controller: _bodyController,
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
+                      decoration: InputDecoration(
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        labelText: "What have you been up to?"
+                      )
+                    ),
+                  ),
+                )
+              ]
+            )
+          )
 
         ],
       )
