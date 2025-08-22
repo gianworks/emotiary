@@ -194,16 +194,14 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                 ),
                 SizedBox(
                   height: 600,
-                  child: Expanded(
-                    child: TextField(
-                      controller: _bodyController,
-                      maxLines: null,
-                      keyboardType: TextInputType.multiline,
-                      decoration: InputDecoration(
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        labelText: "What have you been up to?"
-                      )
-                    ),
+                  child: TextField(
+                    controller: _bodyController,
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                    decoration: InputDecoration(
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      labelText: "What have you been up to?"
+                    )
                   ),
                 )
               ]
