@@ -23,19 +23,19 @@ class PreferencesService {
 
   Future<void> addEntry(Map<String, String> entry) async {
     final String? entriesData = _prefs?.getString(_entriesData);
-    List<Map> entries = entriesData != null ? jsonDecode(entriesData) : [];
+    List<dynamic> entries = entriesData != null ? jsonDecode(entriesData) : [];
     entries.add(entry);
 
     await _prefs?.setString(_entriesData, jsonEncode(entries));
   }
 
-  List<Map> getEntries() {
+  List<dynamic> getEntries() {
     final String? entriesData = _prefs?.getString(_entriesData);
-    List<Map> entries = entriesData != null ? jsonDecode(entriesData) : [];
+    List<dynamic> entries = entriesData != null ? jsonDecode(entriesData) : [];
     return entries;
   }
 
-  void removeEntries() async {
+  void deleteEntries() async {
     await _prefs?.remove(_entriesData);
   }
 
