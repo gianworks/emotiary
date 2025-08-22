@@ -90,7 +90,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
       SnackBar(content: Text("Entry saved successfully!"))
     );
 
-    Navigator.pop(context);
+    Navigator.pop(context, true);
   }
 
   @override
@@ -152,20 +152,20 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
             child: Column(
               spacing: 10,
               children: <Widget> [
-                SizedBox(height: 200),
-                Text("Select date and time", style: TextStyle(fontSize: 23)),
+                SizedBox(height: 220),
+                Text("Select Date and Time", style: TextStyle(fontSize: 23)),
                 TextField(
                   controller: _dateController,
                   readOnly: true,
                   enableInteractiveSelection: false,
-                  decoration: InputDecoration(labelText: "Date", icon: Icon(Icons.date_range)),
+                  decoration: InputDecoration(labelText: "Date", floatingLabelBehavior: FloatingLabelBehavior.never, icon: Icon(Icons.date_range)),
                   onTap: _selectDate,
                 ),
                 TextField(
                   controller: _timeController,
                   readOnly: true,
                   enableInteractiveSelection: false,
-                  decoration: InputDecoration(labelText: "Time", icon: Icon(Icons.timelapse)),
+                  decoration: InputDecoration(labelText: "Time", floatingLabelBehavior: FloatingLabelBehavior.never, icon: Icon(Icons.timelapse)),
                   onTap: _selectTime,
                 ),
                 if (_dateController.text.isNotEmpty && _timeController.text.isNotEmpty) ...[
