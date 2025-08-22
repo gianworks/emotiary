@@ -1,3 +1,4 @@
+import 'package:emotiary/Screens/view_entry_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:emotiary/Screens/new_entry_screen.dart';
 import 'package:emotiary/Services/preferences_service.dart';
@@ -94,6 +95,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: Text(entry["title"]),
                         subtitle: Text("${entry["date"]}"),
                         trailing: Icon(Icons.arrow_forward),
+                        onTap: () => Navigator.push(
+                          context, MaterialPageRoute(builder: (_) => ViewEntryScreen(entry: entry))
+                        )
                       ),
                     );
                   }
