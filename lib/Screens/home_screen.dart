@@ -1,9 +1,10 @@
-import 'package:emotiary/Screens/view_entry_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:emotiary/Screens/new_entry_screen.dart';
+import 'package:emotiary/Screens/view_entry_screen.dart';
 import 'package:emotiary/Services/preferences_service.dart';
 
 class HomeScreen extends StatefulWidget {
+  
   const HomeScreen({super.key});
 
   @override
@@ -17,6 +18,14 @@ class _HomeScreenState extends State<HomeScreen> {
   void _goToNewEntry() async {
     final bool result = await Navigator.push(
       context, MaterialPageRoute(builder: (_) => NewEntryScreen())
+    );
+    if (result == false) return;
+    _updateEntries();
+  }
+
+  void _goToViewEntry(Map entry) async {
+    final bool result = await Navigator.push(
+      context, MaterialPageRoute(builder: (_) => ViewEntryScreen(entry: entry))
     );
     if (result == false) return;
     _updateEntries();
@@ -95,9 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: Text(entry["title"]),
                         subtitle: Text("${entry["date"]}"),
                         trailing: Icon(Icons.arrow_forward),
-                        onTap: () => Navigator.push(
-                          context, MaterialPageRoute(builder: (_) => ViewEntryScreen(entry: entry))
-                        )
+                        onTap: () => _goToViewEntry(entry)
                       ),
                     );
                   }

@@ -78,7 +78,8 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
       "date": _dateController.text,
       "time": _timeController.text,
       "title": _titleController.text,
-      "body": _bodyController.text
+      "body": _bodyController.text,
+      "id": DateTime.now().millisecondsSinceEpoch.toString()
     };
 
     await PreferencesService().addEntry(entry);

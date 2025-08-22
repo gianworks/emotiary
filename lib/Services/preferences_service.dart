@@ -21,10 +21,19 @@ class PreferencesService {
 
   static const String _entriesData = "entries_data";
 
-  Future<void> addEntry(Map<String, String> entry) async {
+  Future<void> addEntry(Map entry) async {
     final String? entriesData = _prefs?.getString(_entriesData);
     List<dynamic> entries = entriesData != null ? jsonDecode(entriesData) : [];
     entries.add(entry);
+
+    await _prefs?.setString(_entriesData, jsonEncode(entries));
+  }
+
+   Future<void> deleteEntry(Map entry) async {
+    final String? entriesData = _prefs?.getString(_entriesData);
+    if (entriesData == null) return;
+    List<dynamic> entries = jsonDecode(entriesData);
+    entries.removeWhere((item) => item["id"] == entry["id"]);
 
     await _prefs?.setString(_entriesData, jsonEncode(entries));
   }
