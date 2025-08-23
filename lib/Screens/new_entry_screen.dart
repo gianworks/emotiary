@@ -106,7 +106,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
             padding: EdgeInsets.only(right: 15),
             child: TextButton(
               onPressed: _saveEntry, 
-              child: Text("Save", style: TextStyle(fontSize: 21, color: Color.fromARGB(255, 66, 139, 223)))
+              child: Text("Save", style: TextStyle(fontSize: 19, color: Color.fromARGB(255, 66, 139, 223)))
             ),
           )
         ],
@@ -194,15 +194,12 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 600,
+                  height: 550,
                   child: TextField(
                     controller: _bodyController,
+                    minLines: 23,
                     maxLines: null,
-                    keyboardType: TextInputType.multiline,
-                    decoration: InputDecoration(
-                      floatingLabelBehavior: FloatingLabelBehavior.never,
-                      labelText: "What have you been up to?"
-                    )
+                    keyboardType: TextInputType.multiline
                   ),
                 )
               ]
