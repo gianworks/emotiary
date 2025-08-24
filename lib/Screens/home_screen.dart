@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:intl/intl.dart';
 import 'package:emotiary/Screens/new_entry_screen.dart';
 import 'package:emotiary/Screens/view_entry_screen.dart';
 import 'package:emotiary/Services/preferences_service.dart';
@@ -11,9 +13,99 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class MoodData {
+  String day;
+  int amount;
 
+  MoodData(this.day, this.amount);
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  
   List<dynamic> _entries = [];
+
+  final Map<String, List<MoodData>> _moodCharts = {
+    "Happy": [
+      MoodData("Mon", 0),
+      MoodData("Tue", 0),
+      MoodData("Wed", 0),
+      MoodData("Thu", 0),
+      MoodData("Fri", 0),
+      MoodData("Sat", 0),
+      MoodData("Sun", 0),
+    ],
+    "Content": [
+      MoodData("Mon", 0),
+      MoodData("Tue", 0),
+      MoodData("Wed", 0),
+      MoodData("Thu", 0),
+      MoodData("Fri", 0),
+      MoodData("Sat", 0),
+      MoodData("Sun", 0),
+    ],
+    "Neutral": [
+      MoodData("Mon", 0),
+      MoodData("Tue", 0),
+      MoodData("Wed", 0),
+      MoodData("Thu", 0),
+      MoodData("Fri", 0),
+      MoodData("Sat", 0),
+      MoodData("Sun", 0),
+    ],
+    "Sad": [
+      MoodData("Mon", 0),
+      MoodData("Tue", 0),
+      MoodData("Wed", 0),
+      MoodData("Thu", 0),
+      MoodData("Fri", 0),
+      MoodData("Sat", 0),
+      MoodData("Sun", 0),
+    ],
+    "Very Sad": [
+      MoodData("Mon", 0),
+      MoodData("Tue", 0),
+      MoodData("Wed", 0),
+      MoodData("Thu", 0),
+      MoodData("Fri", 0),
+      MoodData("Sat", 0),
+      MoodData("Sun", 0),
+    ]
+  };
+
+  bool _isInCurrentWeek(String entryDate) {
+    final DateTime parsedDate = DateFormat("EEEE, MMMM dd, yyyy").parse(entryDate);
+
+    // Normalize (strip time)
+    final DateTime givenDate = DateTime(parsedDate.year, parsedDate.month, parsedDate.day);
+    final DateTime today = DateTime.now();
+    final DateTime refDate = DateTime(today.year, today.month, today.day);
+
+    // Start of the week (Monday)
+    final DateTime weekStart = refDate.subtract(Duration(days: refDate.weekday - DateTime.monday));
+
+    // End of the week (Sunday)
+    final DateTime weekEnd = weekStart.add(Duration(days: 6));
+
+    return givenDate.isAfter(weekStart.subtract(Duration(seconds: 1))) &&
+          givenDate.isBefore(weekEnd.add(Duration(seconds: 1)));
+  }
+
+  void _updateMoodCharts() {
+    _moodCharts.forEach((mood, moodDataList) {
+      for (var moodData in moodDataList) {
+        setState(() => moodData.amount = 0);
+      }
+
+      for (var entry in _entries) {
+        if (entry["mood"] != mood || !_isInCurrentWeek(entry["date"])) continue;
+
+        for (var moodData in moodDataList) {
+          if (!entry["date"].contains(moodData.day)) continue;
+          setState(() => moodData.amount++);
+        }
+      }
+    });
+  }
 
   void _goToNewEntry() async {
     final bool result = await Navigator.push(
@@ -33,6 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _updateEntries() {
     setState(() => _entries = PreferencesService().getEntries());
+    _updateMoodCharts();
   }
 
   void _deleteEntries() {
@@ -83,8 +176,86 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: ListView(
         children: [
-          SizedBox(height: 50),
-          
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: SfCartesianChart(
+              title: ChartTitle(text: "Weekly Moods & Metrics"),
+              legend: Legend(
+                isVisible: true,
+                position: LegendPosition.bottom,
+                orientation: LegendItemOrientation.horizontal,
+                overflowMode: LegendItemOverflowMode.scroll
+              ),
+              primaryXAxis: CategoryAxis(majorGridLines: MajorGridLines(width: 0)),
+              primaryYAxis: NumericAxis(
+                interval: 1,
+                majorGridLines: MajorGridLines(
+                  width: 1,
+                  color: Color.fromARGB(50, 0, 0, 0)
+                )
+              ),
+              series: <CartesianSeries>[
+                AreaSeries<MoodData, String>(
+                  name: "Happy",
+                  dataSource: _moodCharts["Happy"],
+                  xValueMapper: (MoodData mood, _) => mood.day, 
+                  yValueMapper: (MoodData mood, _) => mood.amount,
+                  color: Colors.green,
+                  opacity: 0.3,
+                  borderDrawMode: BorderDrawMode.all,
+                  borderColor: Colors.green,
+                  borderWidth: 3
+                ),
+                AreaSeries<MoodData, String>(
+                  name: "Content",
+                  dataSource: _moodCharts["Content"],
+                  xValueMapper: (MoodData mood, _) => mood.day, 
+                  yValueMapper: (MoodData mood, _) => mood.amount,
+                  color: Color.fromARGB(255, 143, 224, 11),
+                  opacity: 0.3,
+                  borderDrawMode: BorderDrawMode.all,
+                  borderColor: Color.fromARGB(255, 143, 224, 11),
+                  borderWidth: 3
+                ),
+                AreaSeries<MoodData, String>(
+                  name: "Neutral",
+                  dataSource: _moodCharts["Neutral"],
+                  xValueMapper: (MoodData mood, _) => mood.day, 
+                  yValueMapper: (MoodData mood, _) => mood.amount,
+                  color: Color.fromARGB(255, 199, 211, 27),
+                  opacity: 0.3,
+                  borderDrawMode: BorderDrawMode.all,
+                  borderColor: Color.fromARGB(255, 199, 211, 27),
+                  borderWidth: 3
+                ),
+                AreaSeries<MoodData, String>(
+                  name: "Sad",
+                  dataSource: _moodCharts["Sad"],
+                  xValueMapper: (MoodData mood, _) => mood.day, 
+                  yValueMapper: (MoodData mood, _) => mood.amount,
+                  color: Color.fromARGB(255, 206, 132, 22),
+                  opacity: 0.3,
+                  borderDrawMode: BorderDrawMode.all,
+                  borderColor: Color.fromARGB(255, 206, 132, 22),
+                  borderWidth: 3
+                ),
+                AreaSeries<MoodData, String>(
+                  name: "Very Sad",
+                  dataSource: _moodCharts["Very Sad"],
+                  xValueMapper: (MoodData mood, _) => mood.day, 
+                  yValueMapper: (MoodData mood, _) => mood.amount,
+                  color: Color.fromARGB(255, 206, 59, 22),
+                  opacity: 0.3,
+                  borderDrawMode: BorderDrawMode.all,
+                  borderColor: Color.fromARGB(255, 206, 59, 22),
+                  borderWidth: 3
+                )
+              ],
+            ),
+          ),
+
+          SizedBox(height: 30),
+
           Column(
             children: [
               Text("Saved Entries", style: TextStyle(fontSize: 21)),
@@ -127,3 +298,4 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
