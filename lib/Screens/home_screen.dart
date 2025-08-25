@@ -24,8 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   };
 
   @override
-  void initState() 
-  {
+  void initState() {
     super.initState();
     _updateEntries();
   }
@@ -137,7 +136,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 orientation: LegendItemOrientation.horizontal,
                 overflowMode: LegendItemOverflowMode.scroll
               ),
-              primaryXAxis: CategoryAxis(majorGridLines: MajorGridLines(width: 0)),
+              primaryXAxis: CategoryAxis(
+                majorGridLines: MajorGridLines(width: 0)
+              ),
               primaryYAxis: NumericAxis(
                 interval: 1,
                 majorGridLines: MajorGridLines(
@@ -146,62 +147,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               ),
               series: <CartesianSeries>[
-                AreaSeries<MoodData, String>(
-                  name: "Happy",
-                  dataSource: _moodCharts["Happy"],
-                  xValueMapper: (MoodData mood, _) => mood.day, 
-                  yValueMapper: (MoodData mood, _) => mood.amount,
-                  color: Colors.green,
-                  opacity: 0.3,
-                  borderDrawMode: BorderDrawMode.all,
-                  borderColor: Colors.green,
-                  borderWidth: 3
-                ),
-                AreaSeries<MoodData, String>(
-                  name: "Content",
-                  dataSource: _moodCharts["Content"],
-                  xValueMapper: (MoodData mood, _) => mood.day, 
-                  yValueMapper: (MoodData mood, _) => mood.amount,
-                  color: Color.fromARGB(255, 143, 224, 11),
-                  opacity: 0.3,
-                  borderDrawMode: BorderDrawMode.all,
-                  borderColor: Color.fromARGB(255, 143, 224, 11),
-                  borderWidth: 3
-                ),
-                AreaSeries<MoodData, String>(
-                  name: "Neutral",
-                  dataSource: _moodCharts["Neutral"],
-                  xValueMapper: (MoodData mood, _) => mood.day, 
-                  yValueMapper: (MoodData mood, _) => mood.amount,
-                  color: Color.fromARGB(255, 199, 211, 27),
-                  opacity: 0.3,
-                  borderDrawMode: BorderDrawMode.all,
-                  borderColor: Color.fromARGB(255, 199, 211, 27),
-                  borderWidth: 3
-                ),
-                AreaSeries<MoodData, String>(
-                  name: "Sad",
-                  dataSource: _moodCharts["Sad"],
-                  xValueMapper: (MoodData mood, _) => mood.day, 
-                  yValueMapper: (MoodData mood, _) => mood.amount,
-                  color: Color.fromARGB(255, 206, 132, 22),
-                  opacity: 0.3,
-                  borderDrawMode: BorderDrawMode.all,
-                  borderColor: Color.fromARGB(255, 206, 132, 22),
-                  borderWidth: 3
-                ),
-                AreaSeries<MoodData, String>(
-                  name: "Very Sad",
-                  dataSource: _moodCharts["Very Sad"],
-                  xValueMapper: (MoodData mood, _) => mood.day, 
-                  yValueMapper: (MoodData mood, _) => mood.amount,
-                  color: Color.fromARGB(255, 206, 59, 22),
-                  opacity: 0.3,
-                  borderDrawMode: BorderDrawMode.all,
-                  borderColor: Color.fromARGB(255, 206, 59, 22),
-                  borderWidth: 3
-                )
-              ],
+                _moodSeries("Happy", Colors.green),
+                _moodSeries("Content", Colors.lightGreen),
+                _moodSeries("Neutral", Colors.yellow),
+                _moodSeries("Sad", Colors.orange),
+                _moodSeries("Very Sad", Colors.red)
+              ]
             ),
           ),
 
@@ -244,8 +195,22 @@ class _HomeScreenState extends State<HomeScreen> {
               ]
             ]
           )
-        ],
+        ]
       )
+    );
+  }
+
+  AreaSeries _moodSeries(String mood, Color color) {
+    return AreaSeries<MoodData, String>(
+      name: mood,
+      dataSource: _moodCharts[mood],
+      xValueMapper: (MoodData mood, _) => mood.day, 
+      yValueMapper: (MoodData mood, _) => mood.amount,
+      color: color,
+      opacity: 0.3,
+      borderDrawMode: BorderDrawMode.all,
+      borderColor: color,
+      borderWidth: 3
     );
   }
 }
