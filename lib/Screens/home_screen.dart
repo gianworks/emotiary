@@ -166,9 +166,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: _goToNewEntry,
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.green,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        child: Icon(Icons.add, color: Colors.white)
+        child: Icon(Icons.edit, color: Colors.white)
       ),
       body: ListView(
         children: [
