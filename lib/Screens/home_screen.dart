@@ -6,71 +6,51 @@ import 'package:emotiary/Screens/view_entry_screen.dart';
 import 'package:emotiary/Services/preferences_service.dart';
 
 class HomeScreen extends StatefulWidget {
-  
   const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class MoodData {
-  String day;
-  int amount;
-
-  MoodData(this.day, this.amount);
-}
-
 class _HomeScreenState extends State<HomeScreen> {
-  
-  List<dynamic> _entries = [];
+  late List<dynamic> _entries;
+
+  static const List<String> _days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  static const List<String> _moods = ["Happy", "Content", "Neutral", "Sad", "Very Sad"];
 
   final Map<String, List<MoodData>> _moodCharts = {
-    "Happy": [
-      MoodData("Mon", 0),
-      MoodData("Tue", 0),
-      MoodData("Wed", 0),
-      MoodData("Thu", 0),
-      MoodData("Fri", 0),
-      MoodData("Sat", 0),
-      MoodData("Sun", 0),
-    ],
-    "Content": [
-      MoodData("Mon", 0),
-      MoodData("Tue", 0),
-      MoodData("Wed", 0),
-      MoodData("Thu", 0),
-      MoodData("Fri", 0),
-      MoodData("Sat", 0),
-      MoodData("Sun", 0),
-    ],
-    "Neutral": [
-      MoodData("Mon", 0),
-      MoodData("Tue", 0),
-      MoodData("Wed", 0),
-      MoodData("Thu", 0),
-      MoodData("Fri", 0),
-      MoodData("Sat", 0),
-      MoodData("Sun", 0),
-    ],
-    "Sad": [
-      MoodData("Mon", 0),
-      MoodData("Tue", 0),
-      MoodData("Wed", 0),
-      MoodData("Thu", 0),
-      MoodData("Fri", 0),
-      MoodData("Sat", 0),
-      MoodData("Sun", 0),
-    ],
-    "Very Sad": [
-      MoodData("Mon", 0),
-      MoodData("Tue", 0),
-      MoodData("Wed", 0),
-      MoodData("Thu", 0),
-      MoodData("Fri", 0),
-      MoodData("Sat", 0),
-      MoodData("Sun", 0),
-    ]
+    for (var mood in _moods)
+      mood: [for (var day in _days) MoodData(day, 0)]
   };
+
+  @override
+  void initState() 
+  {
+    super.initState();
+    _updateEntries();
+  }
+
+  void _updateEntries() => setState(() { 
+    _entries = PreferencesService().getEntries();
+    _updateMoodCharts(); 
+  });
+
+  void _deleteEntries() { 
+    PreferencesService().deleteEntries(); 
+    _updateEntries(); 
+  }
+
+  void _goToNewEntryScreen() async {
+    final bool result = await Navigator.push(context, MaterialPageRoute(builder: (_) => NewEntryScreen()));
+    if (result == false) return;
+    _updateEntries();
+  }
+
+  void _goToViewEntryScreen(Map entry) async {
+    final bool result = await Navigator.push(context, MaterialPageRoute(builder: (_) => ViewEntryScreen(entry: entry)));
+    if (result == false) return;
+    _updateEntries();
+  }
 
   bool _isInCurrentWeek(String entryDate) {
     final DateTime parsedDate = DateFormat("EEEE, MMMM dd, yyyy").parse(entryDate);
@@ -86,49 +66,37 @@ class _HomeScreenState extends State<HomeScreen> {
     // End of the week (Sunday)
     final DateTime weekEnd = weekStart.add(Duration(days: 6));
 
-    return givenDate.isAfter(weekStart.subtract(Duration(seconds: 1))) &&
-          givenDate.isBefore(weekEnd.add(Duration(seconds: 1)));
+    return givenDate.isAfter(weekStart.subtract(Duration(seconds: 1))) && givenDate.isBefore(weekEnd.add(Duration(seconds: 1)));
   }
 
   void _updateMoodCharts() {
-    _moodCharts.forEach((mood, moodDataList) {
+    // Reset all values
+    for (var moodDataList in _moodCharts.values) {
       for (var moodData in moodDataList) {
-        setState(() => moodData.amount = 0);
+        moodData.amount = 0;
       }
+    }
 
-      for (var entry in _entries) {
-        if (entry["mood"] != mood || !_isInCurrentWeek(entry["date"])) continue;
+    // Filter relevant entries (week only)
+    final currentWeekEntries = _entries.where((entry) => _isInCurrentWeek(entry["date"]));
 
-        for (var moodData in moodDataList) {
-          if (!entry["date"].contains(moodData.day)) continue;
-          setState(() => moodData.amount++);
-        }
+    // Update mood data amount
+    for (var entry in currentWeekEntries) {
+      final String entryMood = entry["mood"];
+      final String entryDate = entry["date"];
+
+      final List<MoodData>? moodDataList = _moodCharts[entryMood];
+      if (moodDataList == null) continue;
+
+      for (var moodData in moodDataList) {
+        if (!entryDate.contains(moodData.day)) continue;
+        moodData.amount++;
+        break;
       }
-    });
+    }
   }
 
-  void _goToNewEntry() async {
-    final bool result = await Navigator.push(
-      context, MaterialPageRoute(builder: (_) => NewEntryScreen())
-    );
-    if (result == false) return;
-    _updateEntries();
-  }
-
-  void _goToViewEntry(Map entry) async {
-    final bool result = await Navigator.push(
-      context, MaterialPageRoute(builder: (_) => ViewEntryScreen(entry: entry))
-    );
-    if (result == false) return;
-    _updateEntries();
-  }
-
-  void _updateEntries() {
-    setState(() => _entries = PreferencesService().getEntries());
-    _updateMoodCharts();
-  }
-
-  void _deleteEntries() {
+  void _showDeleteEntriesDialog() {
     showDialog(
       context: context, 
       builder: (context) => AlertDialog(
@@ -136,43 +104,30 @@ class _HomeScreenState extends State<HomeScreen> {
         content: Text("Are you sure you want to delete all entries? This process cannot be undone."),
         actions: [
           TextButton(
-            onPressed: () {
-              Navigator.pop(context, "Cancel");
-            },
+            onPressed: () => Navigator.pop(context, "Cancel"),
             child: Text("Cancel")
           ),
           TextButton(
-            onPressed: () {
-              PreferencesService().deleteEntries();
-              _updateEntries();
-              Navigator.pop(context, "Delete");
-            },
+            onPressed: () { _deleteEntries(); Navigator.pop(context, "Delete"); },
             child: Text("Delete")
-          ),
+          )
         ]
       )
     );
   }
 
   @override
-  void initState() 
-  {
-    super.initState();
-    _updateEntries();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: _goToNewEntry,
         backgroundColor: Colors.green,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        onPressed: _goToNewEntryScreen,
         child: Icon(Icons.edit, color: Colors.white)
       ),
       body: ListView(
         children: [
-          Container(
+          Padding(
             padding: EdgeInsets.symmetric(horizontal: 15),
             child: SfCartesianChart(
               title: ChartTitle(text: "Weekly Moods & Metrics"),
@@ -271,14 +226,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: Text(entry["title"]),
                         subtitle: Text("${entry["date"]}"),
                         trailing: Icon(Icons.arrow_forward),
-                        onTap: () => _goToViewEntry(entry)
+                        onTap: () => _goToViewEntryScreen(entry)
                       ),
                     );
                   }
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: _deleteEntries,
+                  onPressed: _showDeleteEntriesDialog,
                   child: Text("Delete Entries"),
                 )
               ]
@@ -295,3 +250,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+class MoodData {
+  String day;
+  int amount;
+
+  MoodData(this.day, this.amount);
+}
