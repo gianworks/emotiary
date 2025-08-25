@@ -13,8 +13,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late List<dynamic> _entries;
-
   static const List<String> _days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   static const List<String> _moods = ["Happy", "Content", "Neutral", "Sad", "Very Sad"];
 
@@ -22,6 +20,8 @@ class _HomeScreenState extends State<HomeScreen> {
     for (var mood in _moods)
       mood: [for (var day in _days) MoodData(day, 0)]
   };
+
+  late List<dynamic> _entries;
 
   @override
   void initState() {
@@ -119,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.purple,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         onPressed: _goToNewEntryScreen,
         child: Icon(Icons.edit, color: Colors.white)
@@ -127,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: ListView(
         children: <Widget>[
           const SizedBox(height: 50),
-          
+
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: SfCartesianChart(
@@ -156,11 +156,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           
           const SizedBox(height: 20),
-          
+
           Text("Saved Entries", style: TextStyle(fontSize: 21.5), textAlign: TextAlign.center),
           
           const SizedBox(height: 10),
-
+          
           if (_entries.isNotEmpty) ...[
             ListView.builder(
               shrinkWrap: true,
@@ -193,18 +193,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               }
             ),
-            
-            const SizedBox(height: 50),
-
+            const SizedBox(height: 20),
             Center(
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
                 onPressed: _showDeleteEntriesDialog,
-                child: Text("Delete Entries", style: TextStyle(color: Colors.white))
+                child: Text("Delete Entries", style: TextStyle(color: Colors.red))
               )
             )
           ]
-
           else ...[
             Text("😔", style: TextStyle(fontSize: 24), textAlign: TextAlign.center),
             const SizedBox(height: 10),

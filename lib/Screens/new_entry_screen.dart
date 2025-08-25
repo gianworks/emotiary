@@ -9,7 +9,6 @@ class NewEntryScreen extends StatefulWidget {
 }
 
 class _NewEntryScreenState extends State<NewEntryScreen> {
-
   final PageController _pageController = PageController();
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
@@ -24,51 +23,61 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
     "😭": "Very Sad",
   };
 
-  String _selectedMood = "";  
+  late String _selectedMood = "";  
 
-  void _nextPage() {
-    _pageController.nextPage(
-      duration: Duration(milliseconds: 500), 
-      curve: Curves.easeInOut
-    );
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _setDateControllerText(DateTime.now());
+    _setTimeControllerText(TimeOfDay.now());
   }
+
+  String _formatDate(DateTime dateTime) {
+    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
+    final String dateTimeFormatted = localizations.formatFullDate(dateTime);
+
+    return dateTimeFormatted;
+  }
+
+  String _formatTime(TimeOfDay timeOfDay) {
+    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
+    final String timeOfDayFormatted = localizations.formatTimeOfDay(timeOfDay);
+
+    return timeOfDayFormatted;
+  }
+
+  void _setDateControllerText(DateTime dateTime) => setState(() => _dateController.text = _formatDate(dateTime));
+  void _setTimeControllerText(TimeOfDay timeOfDay) => setState(() => _timeController.text = _formatTime(timeOfDay));
 
   Future<void> _selectDate() async {
     DateTime? dateTime = await showDatePicker(
       context: context, 
       initialDate: DateTime.now(), 
       firstDate: DateTime(2000), 
-      lastDate: DateTime(2100));
+      lastDate: DateTime(2100)
+    );
 
     if (dateTime == null || !mounted) return;
 
-    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
-    final String formattedDateTime = localizations.formatFullDate(dateTime);
-
-    setState(() => _dateController.text = formattedDateTime);
+    _setDateControllerText(dateTime);
   }
 
   Future<void> _selectTime() async {
     TimeOfDay? timeOfDay = await showTimePicker(
       context: context, 
-      initialTime: TimeOfDay.now());
+      initialTime: TimeOfDay.now()
+    );
 
     if (timeOfDay == null || !mounted) return;
 
-    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
-    final String formattedTimeOfDay = localizations.formatTimeOfDay(timeOfDay);
-
-    setState(() => _timeController.text = formattedTimeOfDay);
+    _setTimeControllerText(timeOfDay);
   }
 
   Future<void> _saveEntry() async {
-    if (_selectedMood.isEmpty || _dateController.text.trim().isEmpty ||
-      _timeController.text.trim().isEmpty || _titleController.text.trim().isEmpty ||
-      _bodyController.text.trim().isEmpty) {
+    if (_selectedMood.isEmpty || _dateController.text.trim().isEmpty || _timeController.text.trim().isEmpty 
+      || _titleController.text.trim().isEmpty || _bodyController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please fill out all fields before saving."))
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please fill out all fields before saving.")));
       return;
     }
 
@@ -87,11 +96,19 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
     if (!mounted) return;
 
     ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Entry saved successfully!"))
-    );
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Entry saved successfully!")));
 
     Navigator.pop(context, true);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _pageController.dispose();
+    _dateController.dispose();
+    _timeController.dispose();
+    _titleController.dispose();
+    _bodyController.dispose();
   }
 
   @override
@@ -99,111 +116,109 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
     return Scaffold(
       appBar: AppBar(
         forceMaterialTransparency: true,
+        title: TextField(
+          controller: _titleController,
+          decoration: InputDecoration(
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+            labelText: "Title"
+          )
+        ),
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 15),
+            padding: EdgeInsets.only(right: 16),
             child: TextButton(
               onPressed: _saveEntry, 
-              child: Text("Save", style: TextStyle(fontSize: 19, color: Color.fromARGB(255, 66, 139, 223)))
-            ),
+              child: Text("Done", style: TextStyle(fontSize: 20))
+            )
           )
-        ],
+        ]
       ),
       body: PageView(
         controller: _pageController,
         scrollDirection: Axis.vertical,
-        children: <Widget> [
-
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
-            child: Column(
-              spacing: 10,
-              children: <Widget> [
-                SizedBox(height: 250),
-                Text("How are you feeling?", style: TextStyle(fontSize: 23)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: _moods.keys.map((emoji) {
-                    return GestureDetector(
-                      child: Opacity(
-                        opacity: _selectedMood == emoji ? 1 : 0.5,
-                        child: Text(emoji, style: TextStyle(fontSize: _selectedMood == emoji ? 50 : 40),
-                        ),
-                      ),
-                      onTap: () => setState(() => _selectedMood = emoji)
-                    );
-                  }).toList(),
-                ),
-                if (_selectedMood.isNotEmpty) ...[
-                  Text("${_moods[_selectedMood]}", style: TextStyle(fontSize: 23)),
-                  SizedBox(height: 150),
-                  TextButton(
-                    onPressed: _nextPage, 
-                    child: Text("V", style: TextStyle(fontSize: 20, color: Color.fromARGB(130, 0, 0, 0)))
+        children: <Widget>[
+          Column(
+            children: <Widget> [
+              const SizedBox(height: 150),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    width: 250,
+                    height: 60,
+                    child: TextField(
+                      controller: _dateController,
+                      readOnly: true,
+                      enableInteractiveSelection: false,
+                      decoration: InputDecoration(labelText: "Date", icon: Icon(Icons.date_range)),
+                      onTap: _selectDate,
+                    )
+                  ),
+                  SizedBox(
+                    width: 120,
+                    height: 60,
+                    child: TextField(
+                      controller: _timeController,
+                      readOnly: true,
+                      enableInteractiveSelection: false,
+                      decoration: InputDecoration(labelText: "Time", icon: Icon(Icons.access_time)),
+                      onTap: _selectTime,
+                    )
                   )
                 ]
-              ],
-            ),
-          ),
-
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 40),
-            child: Column(
-              spacing: 10,
-              children: <Widget> [
-                SizedBox(height: 220),
-                Text("Select Date and Time", style: TextStyle(fontSize: 23)),
-                TextField(
-                  controller: _dateController,
-                  readOnly: true,
-                  enableInteractiveSelection: false,
-                  decoration: InputDecoration(labelText: "Date", floatingLabelBehavior: FloatingLabelBehavior.never, icon: Icon(Icons.date_range)),
-                  onTap: _selectDate,
-                ),
-                TextField(
-                  controller: _timeController,
-                  readOnly: true,
-                  enableInteractiveSelection: false,
-                  decoration: InputDecoration(labelText: "Time", floatingLabelBehavior: FloatingLabelBehavior.never, icon: Icon(Icons.timelapse)),
-                  onTap: _selectTime,
-                ),
-                if (_dateController.text.isNotEmpty && _timeController.text.isNotEmpty) ...[
-                  SizedBox(height: 200),
-                  TextButton(
-                    onPressed: _nextPage, 
-                    child: Text("V", style: TextStyle(fontSize: 20, color: Color.fromARGB(130, 0, 0, 0)))
-                  )
-                ]
-              ],
-            )
-          ),
-
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child:  Column(
-              spacing: 30,
-              children: <Widget> [
-                SizedBox(height: 0),
-                TextField(
-                  controller: _titleController,
-                  decoration: InputDecoration(
-                    floatingLabelBehavior: FloatingLabelBehavior.never,
-                    labelText: "Title"
-                  ),
-                ),
-                SizedBox(
-                  height: 550,
-                  child: TextField(
-                    controller: _bodyController,
-                    minLines: 23,
-                    maxLines: null,
-                    keyboardType: TextInputType.multiline
-                  ),
+              ),
+              const SizedBox(height: 70),
+              Text("How are you feeling?", style: TextStyle(fontSize: 20)),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: _moods.keys.map((String emoji) {
+                  final bool isEmojiSelected = (_selectedMood == emoji);
+                  return GestureDetector(
+                    child: Opacity(
+                      opacity: isEmojiSelected ? 1 : 0.5,
+                      child: Column(
+                        children: <Widget>[
+                          Text(emoji, style: TextStyle(fontSize: isEmojiSelected ? 50 : 40)),
+                          Text(_moods[emoji] ?? "", style: TextStyle(fontSize: isEmojiSelected ? 20 : 15))
+                        ]
+                      )
+                    ),
+                    onTap: () => setState(() => _selectedMood = emoji)
+                  );
+                }).toList(),
+              ),
+              if (_selectedMood.isNotEmpty) ...[
+                const SizedBox(height: 200),
+                IconButton(
+                  iconSize: 30,
+                  icon: Icon(Icons.keyboard_double_arrow_down),
+                  onPressed: () => _pageController.nextPage(duration: Duration(milliseconds: 500), curve: Curves.easeInOut)
                 )
               ]
-            )
-          )
+            ]
+          ),
 
+          Column(
+            children: <Widget>[
+              const SizedBox(height: 50),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                height: 700,
+                color: Colors.white,
+                child: TextField(
+                  controller: _bodyController,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                    labelText: "What have you been up to?"
+                  )
+                )
+              )
+            ]
+          )
         ],
       )
     );
