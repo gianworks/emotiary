@@ -125,9 +125,11 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Icon(Icons.edit, color: Colors.white)
       ),
       body: ListView(
-        children: [
+        children: <Widget>[
+          const SizedBox(height: 50),
+          
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
+            padding: EdgeInsets.symmetric(horizontal: 10),
             child: SfCartesianChart(
               title: ChartTitle(text: "Weekly Moods & Metrics"),
               legend: Legend(
@@ -141,10 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               primaryYAxis: NumericAxis(
                 interval: 1,
-                majorGridLines: MajorGridLines(
-                  width: 1,
-                  color: Color.fromARGB(50, 0, 0, 0)
-                )
+                majorGridLines: MajorGridLines(width: 2)
               ),
               series: <CartesianSeries>[
                 _moodSeries("Happy", Colors.green),
@@ -153,48 +152,64 @@ class _HomeScreenState extends State<HomeScreen> {
                 _moodSeries("Sad", Colors.orange),
                 _moodSeries("Very Sad", Colors.red)
               ]
-            ),
+            )
           ),
+          
+          const SizedBox(height: 20),
+          
+          Text("Saved Entries", style: TextStyle(fontSize: 21.5), textAlign: TextAlign.center),
+          
+          const SizedBox(height: 10),
 
-          SizedBox(height: 30),
+          if (_entries.isNotEmpty) ...[
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: _entries.length,
+              itemBuilder: (BuildContext context, int index) {
+                final int reverseIndex = _entries.length - 1 - index;
+                final Map entry = _entries[reverseIndex];
 
-          Column(
-            children: [
-              Text("Saved Entries", style: TextStyle(fontSize: 21)),
-              SizedBox(height: 10),
-              if (_entries.isNotEmpty) ...[
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: _entries.length,
-                  itemBuilder: (context, index) {
-                    final int reverseIndex = _entries.length - 1 - index;
-                    final Map entry = _entries[reverseIndex];
-                    return Card(
-                      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-                      child: ListTile(
-                        leading: Text(entry["emoji"], style: TextStyle(fontSize: 30)),
-                        title: Text(entry["title"]),
-                        subtitle: Text("${entry["date"]}"),
-                        trailing: Icon(Icons.arrow_forward),
-                        onTap: () => _goToViewEntryScreen(entry)
-                      ),
-                    );
-                  }
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _showDeleteEntriesDialog,
-                  child: Text("Delete Entries"),
-                )
-              ]
-              else ...[
-                Center(child: Text("😔", style: TextStyle(fontSize: 21))),
-                Center(child: Text("Your journal is feeling a little lonely..")),
-                Center(child: Text("Add your first entry!"))
-              ]
-            ]
-          )
+                final String entryEmoji = entry["emoji"];
+                final String entryTitle = entry["title"];
+                final String entryBody = entry["body"];
+                final String entryDate = entry["date"];
+
+                return Card(
+                  margin: EdgeInsets.symmetric(vertical: 6, horizontal: 28),
+                  child: ListTile(
+                    leading: Text(entryEmoji, style: TextStyle(fontSize: 30)),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(entryTitle, style: TextStyle(fontSize: 18)),
+                        Text(entryBody, style: TextStyle(fontSize: 14.5), maxLines: 5, overflow: TextOverflow.ellipsis)
+                      ]
+                    ),
+                    subtitle: Text("\n$entryDate", style: TextStyle(fontSize: 14.5)),
+                    trailing: Icon(Icons.arrow_right_rounded, size: 38, color: Colors.grey),
+                    onTap: () => _goToViewEntryScreen(entry)
+                  )
+                );
+              }
+            ),
+            
+            const SizedBox(height: 50),
+
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+                onPressed: _showDeleteEntriesDialog,
+                child: Text("Delete Entries", style: TextStyle(color: Colors.white))
+              )
+            )
+          ]
+
+          else ...[
+            Text("😔", style: TextStyle(fontSize: 24), textAlign: TextAlign.center),
+            const SizedBox(height: 10),
+            Text("Your journal is feeling a little lonely..\nAdd your first entry!", style: TextStyle(fontSize: 14.5), textAlign: TextAlign.center)
+          ]
         ]
       )
     );
