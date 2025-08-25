@@ -43,9 +43,7 @@ class _ViewEntryScreenState extends State<ViewEntryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
         forceMaterialTransparency: true,
-        title: Text("View Entry", style: TextStyle(fontWeight: FontWeight.w600)),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 15),
