@@ -40,55 +40,56 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _goToNewEntryScreen() async {
-    final bool result = await Navigator.push(context, MaterialPageRoute(builder: (_) => NewEntryScreen()));
-    if (result == false) return;
+    final dynamic result = await Navigator.push(context, MaterialPageRoute(builder: (_) => NewEntryScreen()));
+    if (result == null) return;
     _updateEntries();
   }
 
   void _goToViewEntryScreen(Map entry) async {
-    final bool result = await Navigator.push(context, MaterialPageRoute(builder: (_) => ViewEntryScreen(entry: entry)));
-    if (result == false) return;
+    final dynamic result = await Navigator.push(context, MaterialPageRoute(builder: (_) => ViewEntryScreen(entry: entry)));
+    if (result == null) return;
     _updateEntries();
   }
 
-  bool _isInCurrentWeek(String entryDate) {
-    final DateTime parsedDate = DateFormat("EEEE, MMMM dd, yyyy").parse(entryDate);
-
-    // Normalize (strip time)
-    final DateTime givenDate = DateTime(parsedDate.year, parsedDate.month, parsedDate.day);
+  DateTime _getWeekStart() {
     final DateTime today = DateTime.now();
-    final DateTime refDate = DateTime(today.year, today.month, today.day);
+    return DateTime(today.year, today.month, today.day - (today.weekday - DateTime.monday));
+  }
 
-    // Start of the week (Monday)
-    final DateTime weekStart = refDate.subtract(Duration(days: refDate.weekday - DateTime.monday));
+  DateTime _getWeekEnd() {
+    final DateTime start = _getWeekStart();
+    return start.add(Duration(days: 7)).subtract(Duration(milliseconds: 1));
+  }
 
-    // End of the week (Sunday)
-    final DateTime weekEnd = weekStart.add(Duration(days: 6));
+  bool _isInCurrentWeek(String entryDate) {
+    final DateTime date = DateFormat("dd/MM/yyyy").parse(entryDate);
+    final DateTime start = _getWeekStart();
+    final DateTime end = _getWeekEnd();
 
-    return givenDate.isAfter(weekStart.subtract(Duration(seconds: 1))) && givenDate.isBefore(weekEnd.add(Duration(seconds: 1)));
+    return !date.isBefore(start) && !date.isAfter(end);
   }
 
   void _updateMoodCharts() {
-    // Reset all values
     for (var moodDataList in _moodCharts.values) {
       for (var moodData in moodDataList) {
         moodData.amount = 0;
       }
     }
 
-    // Filter relevant entries (week only)
-    final currentWeekEntries = _entries.where((entry) => _isInCurrentWeek(entry["date"]));
+    final Iterable<dynamic> currentWeekEntries = _entries.where((entry) => _isInCurrentWeek(entry["date"]));
 
-    // Update mood data amount
     for (var entry in currentWeekEntries) {
       final String entryMood = entry["mood"];
-      final String entryDate = entry["date"];
+      String entryDate = entry["date"];
+
+      final DateTime date = DateFormat("dd/MM/yyyy").parse(entryDate);
+      entryDate = DateFormat("E").format(date);
 
       final List<MoodData>? moodDataList = _moodCharts[entryMood];
       if (moodDataList == null) continue;
 
       for (var moodData in moodDataList) {
-        if (!entryDate.contains(moodData.day)) continue;
+        if (entryDate != moodData.day) continue;
         moodData.amount++;
         break;
       }
@@ -127,11 +128,10 @@ class _HomeScreenState extends State<HomeScreen> {
       body: ListView(
         children: <Widget>[
           const SizedBox(height: 50),
-
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: SfCartesianChart(
-              title: ChartTitle(text: "Weekly Moods & Metrics"),
+              title: ChartTitle(text: "This Week's Mood Journey\n${DateFormat("MMM d").format(_getWeekStart())} - ${DateFormat("MMM d").format(_getWeekEnd())}"),
               legend: Legend(
                 isVisible: true,
                 position: LegendPosition.bottom,
@@ -154,13 +154,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ]
             )
           ),
-          
           const SizedBox(height: 20),
-
           Text("Saved Entries", style: TextStyle(fontSize: 21.5), textAlign: TextAlign.center),
-          
           const SizedBox(height: 10),
-          
           if (_entries.isNotEmpty) ...[
             ListView.builder(
               shrinkWrap: true,
@@ -169,12 +165,10 @@ class _HomeScreenState extends State<HomeScreen> {
               itemBuilder: (BuildContext context, int index) {
                 final int reverseIndex = _entries.length - 1 - index;
                 final Map entry = _entries[reverseIndex];
-
                 final String entryEmoji = entry["emoji"];
                 final String entryTitle = entry["title"];
                 final String entryBody = entry["body"];
                 final String entryDate = entry["date"];
-
                 return Card(
                   margin: EdgeInsets.symmetric(vertical: 6, horizontal: 28),
                   child: ListTile(
@@ -183,10 +177,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(entryTitle, style: TextStyle(fontSize: 18)),
-                        Text(entryBody, style: TextStyle(fontSize: 14.5), maxLines: 5, overflow: TextOverflow.ellipsis)
+                        const SizedBox(height: 10),
+                        Text(entryBody, style: TextStyle(fontSize: 14.5), maxLines: 5, overflow: TextOverflow.ellipsis),
+                        const SizedBox(height: 10)
                       ]
                     ),
-                    subtitle: Text("\n$entryDate", style: TextStyle(fontSize: 14.5)),
+                    subtitle: Text(entryDate, style: TextStyle(fontSize: 14.5)),
                     trailing: Icon(Icons.arrow_right_rounded, size: 38, color: Colors.grey),
                     onTap: () => _goToViewEntryScreen(entry)
                   )
@@ -218,10 +214,10 @@ class _HomeScreenState extends State<HomeScreen> {
       xValueMapper: (MoodData mood, _) => mood.day, 
       yValueMapper: (MoodData mood, _) => mood.amount,
       color: color,
-      opacity: 0.3,
+      opacity: 0.5,
       borderDrawMode: BorderDrawMode.all,
       borderColor: color,
-      borderWidth: 3
+      borderWidth: 0
     );
   }
 }

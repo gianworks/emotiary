@@ -1,5 +1,6 @@
-import 'package:emotiary/Services/preferences_service.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:emotiary/Services/preferences_service.dart';
 
 class NewEntryScreen extends StatefulWidget {
   const NewEntryScreen({super.key});
@@ -32,22 +33,8 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
     _setTimeControllerText(TimeOfDay.now());
   }
 
-  String _formatDate(DateTime dateTime) {
-    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
-    final String dateTimeFormatted = localizations.formatFullDate(dateTime);
-
-    return dateTimeFormatted;
-  }
-
-  String _formatTime(TimeOfDay timeOfDay) {
-    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
-    final String timeOfDayFormatted = localizations.formatTimeOfDay(timeOfDay);
-
-    return timeOfDayFormatted;
-  }
-
-  void _setDateControllerText(DateTime dateTime) => setState(() => _dateController.text = _formatDate(dateTime));
-  void _setTimeControllerText(TimeOfDay timeOfDay) => setState(() => _timeController.text = _formatTime(timeOfDay));
+  void _setDateControllerText(DateTime dateTime) => setState(() => _dateController.text = DateFormat("dd/MM/yyyy").format(dateTime));
+  void _setTimeControllerText(TimeOfDay timeOfDay) => setState(() => _timeController.text = timeOfDay.format(context));
 
   Future<void> _selectDate() async {
     DateTime? dateTime = await showDatePicker(
@@ -144,13 +131,13 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   SizedBox(
-                    width: 250,
+                    width: 140,
                     height: 60,
                     child: TextField(
                       controller: _dateController,
                       readOnly: true,
                       enableInteractiveSelection: false,
-                      decoration: InputDecoration(labelText: "Date", icon: Icon(Icons.date_range)),
+                      decoration: InputDecoration(icon: Icon(Icons.date_range)),
                       onTap: _selectDate,
                     )
                   ),
@@ -161,13 +148,13 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                       controller: _timeController,
                       readOnly: true,
                       enableInteractiveSelection: false,
-                      decoration: InputDecoration(labelText: "Time", icon: Icon(Icons.access_time)),
+                      decoration: InputDecoration(icon: Icon(Icons.access_time)),
                       onTap: _selectTime,
                     )
                   )
                 ]
               ),
-              const SizedBox(height: 70),
+              const SizedBox(height: 50),
               Text("How are you feeling?", style: TextStyle(fontSize: 20)),
               const SizedBox(height: 10),
               Row(
@@ -198,13 +185,12 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
               ]
             ]
           ),
-
           Column(
             children: <Widget>[
               const SizedBox(height: 50),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20),
-                height: 700,
+                height: 650,
                 color: Colors.white,
                 child: TextField(
                   controller: _bodyController,
@@ -219,7 +205,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
               )
             ]
           )
-        ],
+        ]
       )
     );
   }
