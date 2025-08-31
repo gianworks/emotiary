@@ -10,13 +10,15 @@ class AppTheme {
       foregroundColor: Colors.white
     ),
     appBarTheme: AppBarTheme(
+      toolbarHeight: 70,
       titleTextStyle: TextStyle(
         fontFamily: "Inter", 
         fontSize: 24,
-        fontWeight: FontWeight.bold, 
+        fontWeight: FontWeight.w700, 
         color: AppColors.veryDarkBrown
       ),
-      backgroundColor: AppColors.beige,
+      shape: Border(bottom: BorderSide(color: AppColors.tan)),
+      backgroundColor: AppColors.beige
     )
   );
 }
