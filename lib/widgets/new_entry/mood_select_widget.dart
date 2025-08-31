@@ -24,26 +24,30 @@ class MoodSelectWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const SizedBox(height: 200),
-        SizedBox(
-          width: 215,
-          child: TextField(
-            controller: dateTextController,
-            readOnly: true,
-            enableInteractiveSelection: false,
-            style: TextStyle(fontSize: 16, color: AppColors.saddleBrown),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              icon: Icon(Icons.date_range_rounded, color: AppColors.saddleBrown),
-              suffixIcon: Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.saddleBrown),
-              suffixIconConstraints: BoxConstraints(minHeight: 12, minWidth: 12)
+        const SizedBox(height: 170),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(Icons.date_range_rounded, color: AppColors.saddleBrown),
+            SizedBox(
+              width: 160,
+              child: TextField(
+                controller: dateTextController,
+                readOnly: true,
+                enableInteractiveSelection: false,
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(border: InputBorder.none),
+                style: TextStyle(fontSize: 16, color: AppColors.saddleBrown),
+                onTap: onSelectDate
+              )
             ),
-            onTap: onSelectDate
-          )
+            Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.saddleBrown)
+          ]
         ),
         const SizedBox(height: 20),
-        Text("How are you feeling?", style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
-        const SizedBox(height: 20),
+        Text("How are you feeling?", style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600, color: AppColors.veryDarkBrown)),
+        const SizedBox(height: 30),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -56,30 +60,25 @@ class MoodSelectWidget extends StatelessWidget {
             return GestureDetector(
               onTap: () => onSelectMood(mood),
               child: AnimatedOpacity(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
                 opacity: (isSelected) ? 1 : 0.5,
-                child: Column(
-                  children: [
-                    _animateText(emoji, 48, 42, isSelected),
-                    const SizedBox(height: 5),
-                    _animateText(mood, 20, 16, isSelected, color: AppColors.brown)
-                  ]
+                curve: Curves.easeInOut,
+                duration: const Duration(milliseconds: 300),
+                child: AnimatedScale(
+                  scale: (isSelected) ? 1.1 : 1,
+                  curve: Curves.easeInOut,
+                  duration: const Duration(milliseconds: 300),
+                  child: Column(
+                    children: [
+                      Text(emoji, style: TextStyle(fontSize: 42)),
+                      Text(mood, style: TextStyle(fontSize: 16, color: AppColors.brown))
+                    ]
+                  )
                 )
               )
             );
           }).toList()
         )
       ]
-    );
-  }
-
-  Widget _animateText(String text, double selectedSize, double normalSize, bool isSelected, {Color? color}) {
-    return AnimatedDefaultTextStyle(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      style: TextStyle(fontSize: isSelected ? selectedSize : normalSize, color: color),
-      child: Text(text)
     );
   }
 }

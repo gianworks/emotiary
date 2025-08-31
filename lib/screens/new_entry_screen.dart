@@ -1,7 +1,8 @@
 import "package:emotiary/theme/app_colors.dart";
 import "package:flutter/material.dart";
-import "package:emotiary/widgets/new_entry/mood_select_widget.dart";
 import "package:emotiary/utils/date_time_utils.dart";
+import "package:emotiary/widgets/new_entry/mood_select_widget.dart";
+import "package:emotiary/widgets/new_entry/activity_select_widget.dart";
 
 class NewEntryScreen extends StatefulWidget {
   const NewEntryScreen({super.key});
@@ -21,6 +22,27 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
     "Down": "☹️",
     "Awful": "😞",
   };
+
+  final Map<String, String> _activities = {
+    "Work": "💼",
+    "Exercise": "🏃",
+    "Travel": "✈️",
+    "Music": "🎵",
+    "Nature": "🌳",
+    "Gaming": "🎮",
+    "Art": "🎨",
+    "Relaxing": "🧘‍♀️",
+    "Reading": "📚",
+    "Eating": "🍽️",
+    "Cooking": "🍳",
+    "Watching": "🖥️",
+    "Cleaning": "🧹",
+    "Shopping": "🛍️",
+    "Friends": "👥",
+    "Other": "🚩"
+  };
+
+  final Map<String, String> _selectedActivities = {};
 
   int _currentPage = 0;
   String _selectedMood = "";
@@ -54,6 +76,14 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
     setState(() => _selectedMood = mood);
   }
 
+  void _onSelectActivity(MapEntry<String, String> entry) {
+    setState(() => _selectedActivities.addEntries([entry]));
+  }
+
+  void _onUnselectActivity(MapEntry<String, String> entry) {
+    setState(() => _selectedActivities.remove(entry.key));
+  }
+
   void _goToNextPage (bool condition) {
     if (!condition) return;
     _pageController.nextPage(
@@ -75,7 +105,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
       case 0:
         return _selectedMood.isNotEmpty;
       case 1:
-        return false;
+        return _selectedActivities.isNotEmpty;
       default:
         return false;
     }
@@ -117,7 +147,12 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
               onSelectDate: _onSelectDate, 
               onSelectMood: _onSelectMood
             ),
-            Center(child: Text("Activity Select"))
+            ActivitySelectWidget(
+              activities: _activities, 
+              selectedActivities: _selectedActivities,
+              onSelectActivity: _onSelectActivity,
+              onUnselectActivity: _onUnselectActivity,
+            )
           ]
         )
       )
