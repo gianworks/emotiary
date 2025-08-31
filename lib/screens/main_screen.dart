@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:emotiary/theme/app_colors.dart";
 import "package:emotiary/screens/home_screen.dart";
 import "package:emotiary/screens/new_entry_screen.dart";
 import "package:emotiary/screens/insights_screen.dart";
@@ -14,10 +15,10 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final PageController _pageController = PageController();
 
-  final List<IconData> _icons = [
-    Icons.home,
-    Icons.bar_chart_rounded
-  ];
+  final Map<String, IconData> _icons = {
+    "Home": Icons.home,
+    "Insights": Icons.bar_chart_rounded
+  };
 
   final List<Widget> _screens = [
     HomeScreen(),
@@ -46,15 +47,23 @@ class _MainScreenState extends State<MainScreen> {
         child: Icon(Icons.edit_rounded)
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: AnimatedBottomNavigationBar(
-        icons: _icons, 
-        activeIndex: _bottomNavIndex, 
-        gapLocation: GapLocation.center,
-        notchSmoothness: NotchSmoothness.verySmoothEdge,
+      bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+        height: 64,
         leftCornerRadius: 32,
         rightCornerRadius: 32,
-        activeColor: Colors.black,
-        inactiveColor: Colors.grey,
+        itemCount: _icons.length,
+        activeIndex: _bottomNavIndex,  
+        tabBuilder: (int index, bool isActive) {
+          return Column(
+            children: [
+              const SizedBox(height: 15),
+              Icon(_icons.values.elementAt(index), color: isActive ? AppColors.veryDarkBrown : Colors.grey),
+              Text(_icons.keys.elementAt(index), style: TextStyle(color: isActive ? AppColors.veryDarkBrown : Colors.grey))
+            ]
+          );
+        },
+        gapLocation: GapLocation.center,
+        notchSmoothness: NotchSmoothness.verySmoothEdge,
         onTap: (index) {
           setState(() => _bottomNavIndex = index);
           _pageController.animateToPage(_bottomNavIndex, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
