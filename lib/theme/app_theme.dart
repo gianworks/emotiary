@@ -10,10 +10,9 @@ class AppTheme {
       foregroundColor: Colors.white
     ),
     appBarTheme: AppBarTheme(
-      toolbarHeight: 70,
       titleTextStyle: TextStyle(
         fontFamily: "Inter", 
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: FontWeight.w700, 
         color: AppColors.veryDarkBrown
       ),

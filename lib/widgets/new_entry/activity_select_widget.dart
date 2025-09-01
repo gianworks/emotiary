@@ -22,7 +22,7 @@ class ActivitySelectWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const SizedBox(height: 70),
+        const SizedBox(height: 50),
         Text("What have you been up to?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.veryDarkBrown)),
         const SizedBox(height: 10),
         Expanded(
@@ -45,9 +45,10 @@ class ActivitySelectWidget extends StatelessWidget {
                     duration: const Duration(milliseconds: 300),
                     child: Column(
                       children: [
-                        Container(
+                        AnimatedContainer(
                           width: 55,
                           height: 55,
+                          duration: const Duration(milliseconds: 300),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle, 
                             color: (isSelected) ? AppColors.almond : Colors.white, 
@@ -55,7 +56,7 @@ class ActivitySelectWidget extends StatelessWidget {
                           ),
                           child: Center(child: Text(emoji, style: TextStyle(fontSize: 32)))
                         ),
-                        const SizedBox(height: 5),
+                        const SizedBox(height: 10),
                         Text(activity, style: TextStyle(fontSize: 16, color: AppColors.brown))
                       ]
                     )

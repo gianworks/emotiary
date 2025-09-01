@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:flutter_quill/flutter_quill.dart';
 import "package:emotiary/theme/app_theme.dart";
 import "package:emotiary/screens/main_screen.dart";
 
@@ -15,6 +16,7 @@ class MainApp extends StatelessWidget {
       title: "Emotiary",
       theme: AppTheme.appThemeData,
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: const [ FlutterQuillLocalizations.delegate ],
       home: MainScreen()
     );
   }
