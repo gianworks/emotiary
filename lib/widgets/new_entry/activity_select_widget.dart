@@ -2,15 +2,32 @@ import "package:flutter/material.dart";
 import "package:emotiary/theme/app_colors.dart";
 
 class ActivitySelectWidget extends StatelessWidget {
-  final Map<String, String> activities;
+  final Map<String, String> _activities = {
+    "Work": "💼",
+    "Exercise": "🏃",
+    "Travel": "✈️",
+    "Music": "🎵",
+    "Nature": "🌳",
+    "Gaming": "🎮",
+    "Art": "🎨",
+    "Relaxing": "🧘‍♀️",
+    "Reading": "📚",
+    "Eating": "🍽️",
+    "Cooking": "🍳",
+    "Watching": "🖥️",
+    "Cleaning": "🧹",
+    "Shopping": "🛍️",
+    "Friends": "👥",
+    "Other": "🚩"
+  };
+
   final Map<String, String> selectedActivities;
 
   final Function(MapEntry<String, String> activity) onSelectActivity;
   final Function(MapEntry<String, String> activity) onUnselectActivity;
 
-  const ActivitySelectWidget({ 
-    super.key, 
-    required this.activities, 
+  ActivitySelectWidget({ 
+    super.key,
     required this.selectedActivities, 
     required this.onSelectActivity,
     required this.onUnselectActivity
@@ -27,11 +44,12 @@ class ActivitySelectWidget extends StatelessWidget {
         const SizedBox(height: 10),
         Expanded(
           child: GridView.count(
+            shrinkWrap: true,
             crossAxisCount: 4,
             childAspectRatio: 0.75,
             physics: NeverScrollableScrollPhysics(),
             padding: EdgeInsets.all(30),
-            children: activities.entries.map((entry) {
+            children: _activities.entries.map((entry) {
               final String activity = entry.key;
               final String emoji = entry.value;
               final bool isSelected = selectedActivities.containsKey(activity);
@@ -52,7 +70,7 @@ class ActivitySelectWidget extends StatelessWidget {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle, 
                             color: (isSelected) ? AppColors.almond : Colors.white, 
-                            border: Border.all(width: 1, color: AppColors.tan)
+                            border: Border.all(width: 1, color: AppColors.almond)
                           ),
                           child: Center(child: Text(emoji, style: TextStyle(fontSize: 32)))
                         ),

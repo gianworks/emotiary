@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import 'package:flutter_quill/flutter_quill.dart';
+import "package:flutter_quill/flutter_quill.dart";
 import "package:emotiary/theme/app_colors.dart";
 import "package:emotiary/utils/date_time_utils.dart";
 import "package:emotiary/widgets/new_entry/mood_select_widget.dart";
@@ -14,52 +14,16 @@ class NewEntryScreen extends StatefulWidget {
 }
 
 class _NewEntryScreenState extends State<NewEntryScreen> {
-  final Map<String, String> _moods = {
-    "Happy": "😄",
-    "Calm": "😊",
-    "Meh": "😐",
-    "Down": "☹️",
-    "Awful": "😞",
-  };
-
-  final Map<String, String> _activities = {
-    "Work": "💼",
-    "Exercise": "🏃",
-    "Travel": "✈️",
-    "Music": "🎵",
-    "Nature": "🌳",
-    "Gaming": "🎮",
-    "Art": "🎨",
-    "Relaxing": "🧘‍♀️",
-    "Reading": "📚",
-    "Eating": "🍽️",
-    "Cooking": "🍳",
-    "Watching": "🖥️",
-    "Cleaning": "🧹",
-    "Shopping": "🛍️",
-    "Friends": "👥",
-    "Other": "🚩"
-  };
-
   final PageController _pageController = PageController();
   final TextEditingController _dateTextController = TextEditingController();
-
-  final QuillController _titleQuillController = QuillController(
-    document: Document.fromJson([{ "insert": "\n", "attributes": { "color": "#3E2723", "size": 20, "bold": true } }]),
-    selection: TextSelection.collapsed(offset: 0)
-  );
-
-  final QuillController _noteQuillControler = QuillController(
-    document: Document.fromJson([{ "insert": "\n", "attributes": { "color": "#6D4C41" } }]),
-    selection: TextSelection.collapsed(offset: 0)
-  );
+  final QuillController _titleQuillController = QuillController.basic();
+  final QuillController _noteQuillControler = QuillController.basic();
 
   final FocusNode _titleFocusNode = FocusNode();
   final FocusNode _noteFocusNode = FocusNode();
 
-  final Map<String, String> _selectedActivities = {};
-
   final int _lastPage = 2;
+  final Map<String, String> _selectedActivities = {};
 
   int _currentPage = 0;
   String _selectedMood = "";
@@ -80,18 +44,6 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
     _dateTextController.dispose();
     _titleQuillController.dispose();
     _noteQuillControler.dispose();
-  }
-
-  Future<void> _onSelectDate() async {
-    DateTime? selectedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000), 
-      lastDate: DateTime(2100)
-    );
-
-    if (selectedDate == null) return;
-    _dateTextController.text = DateTimeUtils.formatDate(selectedDate);
   }
 
   void _onSelectMood(String mood) {
@@ -133,7 +85,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
       case 1:
         return _selectedActivities.isNotEmpty;
       case 2:
-        return _titleQuillController.document.toPlainText().trim().isNotEmpty;
+        return _titleQuillController.document.toPlainText().trim().isNotEmpty && _noteQuillControler.document.toPlainText().trim().isNotEmpty;
       default:
         return false;
     }
@@ -169,14 +121,11 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
           onPageChanged: (index) => setState(() => _currentPage = index),
           children: [
             MoodSelectWidget(
-              dateTextController: _dateTextController, 
-              moods: _moods, 
+              dateTextController: _dateTextController,
               selectedMood: _selectedMood, 
-              onSelectDate: _onSelectDate, 
               onSelectMood: _onSelectMood
             ),
             ActivitySelectWidget(
-              activities: _activities, 
               selectedActivities: _selectedActivities,
               onSelectActivity: _onSelectActivity,
               onUnselectActivity: _onUnselectActivity

@@ -32,7 +32,7 @@ class NoteWriteWidget extends StatelessWidget {
             const SizedBox(height: 50),
             Center(
               child: Container(
-                width: 360,
+                width: 350,
                 height: 50,
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
@@ -44,8 +44,18 @@ class NoteWriteWidget extends StatelessWidget {
                   controller: titleQuillController,
                   focusNode: titleFocusNode,
                   config: QuillEditorConfig(
-                    placeholder: "Add entry title..",
+                    autoFocus: true,
+                    scrollable: true,
+                    expands:  true,
+                    placeholder: "Add title..",
                     customStyles: DefaultStyles(
+                      paragraph: DefaultTextBlockStyle(
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.veryDarkBrown),
+                        HorizontalSpacing(0, 0),
+                        VerticalSpacing(0, 0),
+                        VerticalSpacing(0, 0),
+                        null
+                      ),
                       placeHolder: DefaultTextBlockStyle(
                         TextStyle(fontSize: 20, color: Colors.grey),
                         HorizontalSpacing(0, 0),
@@ -61,7 +71,7 @@ class NoteWriteWidget extends StatelessWidget {
             const SizedBox(height: 20),
             Center(
               child: Container(
-                width: 360,
+                width: 350,
                 height: 400,
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
@@ -73,8 +83,15 @@ class NoteWriteWidget extends StatelessWidget {
                   controller: noteQuillController,
                   focusNode: noteFocusNode,
                   config: QuillEditorConfig(
-                    placeholder: "Add entry note.. (Optional)",
+                    placeholder: "Add note..",
                     customStyles: DefaultStyles(
+                      paragraph: DefaultTextBlockStyle(
+                        TextStyle(fontSize: 16, color: AppColors.brown),
+                        HorizontalSpacing(0, 0),
+                        VerticalSpacing(0, 0),
+                        VerticalSpacing(0, 0),
+                        null
+                      ),
                       placeHolder: DefaultTextBlockStyle(
                         TextStyle(fontSize: 16, color: Colors.grey),
                         HorizontalSpacing(0, 0),
@@ -108,6 +125,11 @@ class NoteWriteWidget extends StatelessWidget {
           showIndent: false,
           showUndo: false,
           showRedo: false,
+          showColorButton: false,
+          showBackgroundColorButton: false,
+          showListBullets: false,
+          showListNumbers: false,
+          showQuote: (noteFocusNode.hasFocus),
           showBoldButton: (noteFocusNode.hasFocus),
           color: AppColors.beige
         )

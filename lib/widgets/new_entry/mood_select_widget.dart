@@ -1,22 +1,33 @@
 import "package:flutter/material.dart";
 import "package:emotiary/theme/app_colors.dart";
+import "package:emotiary/utils/date_time_utils.dart";
 
 class MoodSelectWidget extends StatelessWidget {
+  final Map<String, String> _moods = {
+    "Happy": "😄",
+    "Calm": "😊",
+    "Meh": "😐",
+    "Down": "☹️",
+    "Awful": "😞",
+  };
+
   final TextEditingController dateTextController;
-  final Map<String, String> moods;
   final String selectedMood;
 
-  final VoidCallback onSelectDate;
   final Function(String mood) onSelectMood;
 
-  const MoodSelectWidget({ 
+  MoodSelectWidget({ 
     super.key, 
     required this.dateTextController, 
-    required this.moods,
     required this.selectedMood,
-    required this.onSelectDate,
     required this.onSelectMood 
   });
+
+  Future<void> _onSelectDate(BuildContext context) async {
+    DateTime? selectedDate = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(2000), lastDate: DateTime(2100));
+    if (selectedDate == null) return;
+    dateTextController.text = DateTimeUtils.formatDate(selectedDate);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +50,7 @@ class MoodSelectWidget extends StatelessWidget {
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(border: InputBorder.none),
                 style: TextStyle(fontSize: 16, color: AppColors.saddleBrown),
-                onTap: onSelectDate
+                onTap: () => _onSelectDate(context)
               )
             ),
             Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.saddleBrown)
@@ -52,7 +63,7 @@ class MoodSelectWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           spacing: 20,
-          children: moods.entries.map((entry) {
+          children: _moods.entries.map((entry) {
             final String mood = entry.key;
             final String emoji = entry.value;
             final bool isSelected = selectedMood == mood;
