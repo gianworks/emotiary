@@ -21,8 +21,8 @@ class EntryAdapter extends TypeAdapter<Entry> {
       mood: fields[1] as String,
       moodEmoji: fields[2] as String,
       activities: (fields[3] as Map).cast<String, String>(),
-      title: fields[4] as String,
-      note: fields[5] as String,
+      titleJson: fields[4] as String,
+      noteJson: fields[5] as String,
     );
   }
 
@@ -39,9 +39,9 @@ class EntryAdapter extends TypeAdapter<Entry> {
       ..writeByte(3)
       ..write(obj.activities)
       ..writeByte(4)
-      ..write(obj.title)
+      ..write(obj.titleJson)
       ..writeByte(5)
-      ..write(obj.note);
+      ..write(obj.noteJson);
   }
 
   @override

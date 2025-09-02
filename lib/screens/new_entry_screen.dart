@@ -1,7 +1,10 @@
+import "dart:convert";
 import "package:flutter/material.dart";
 import "package:flutter_quill/flutter_quill.dart";
 import "package:emotiary/theme/app_colors.dart";
 import "package:emotiary/utils/date_time_utils.dart";
+import "package:emotiary/models/entry.dart";
+import "package:emotiary/repositories/entry_repository.dart";
 import "package:emotiary/widgets/new_entry/mood_select_widget.dart";
 import "package:emotiary/widgets/new_entry/activity_select_widget.dart";
 import "package:emotiary/widgets/new_entry/note_write_widget.dart";
@@ -95,8 +98,20 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
     );
   }
 
-  void _saveEntry() {
-    // Save entry and its details to a database here
+  void _saveEntry() async {
+    final Entry newEntry = Entry(
+      date: _dateTextController.text,
+      mood: _selectedMood,
+      moodEmoji: _selectedMoodEmoji,
+      activities: _selectedActivities,
+      titleJson: jsonEncode(_titleQuillController.document.toDelta().toJson()),
+      noteJson: jsonEncode(_noteQuillController.document.toDelta().toJson())
+    );
+    
+    await EntryRepository.addEntry(newEntry);
+    
+    if (!mounted) return;
+    Navigator.pop(context, true);
   }
 
   bool _canShowDoneButton() {

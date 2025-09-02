@@ -17,17 +17,17 @@ class Entry extends HiveObject {
   Map<String, String> activities;
 
   @HiveField(4)
-  String title;
+  String titleJson;
 
   @HiveField(5)
-  String note;
+  String noteJson;
 
   Entry({ 
     required this.date, 
     required this.mood,
     required this.moodEmoji,
     required this.activities, 
-    required this.title, 
-    required this.note 
+    required this.titleJson, 
+    required this.noteJson 
   });
 }
