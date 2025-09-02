@@ -17,7 +17,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
   final PageController _pageController = PageController();
   final TextEditingController _dateTextController = TextEditingController();
   final QuillController _titleQuillController = QuillController.basic();
-  final QuillController _noteQuillControler = QuillController.basic();
+  final QuillController _noteQuillController = QuillController.basic();
 
   final FocusNode _titleFocusNode = FocusNode();
   final FocusNode _noteFocusNode = FocusNode();
@@ -27,14 +27,31 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
 
   int _currentPage = 0;
   String _selectedMood = "";
+  String _selectedMoodEmoji = "";
+  QuillController _activeController = QuillController.basic();
 
   @override
   void initState() {
     super.initState();
     _dateTextController.text = DateTimeUtils.formatDate(DateTime.now());
 
-    _titleFocusNode.addListener(() => setState(() {}));
-    _noteFocusNode.addListener(() => setState(() {}));
+    _titleQuillController.addListener(() {
+      setState(() {});
+    });
+
+    _noteQuillController.addListener(() {
+      setState(() {});
+    });
+
+    _titleFocusNode.addListener(() {
+      if (_activeController == _titleQuillController) return;
+      setState(() => _activeController = _titleQuillController);
+    });
+
+    _noteFocusNode.addListener(() {
+      if (_activeController == _noteQuillController) return;
+      setState(() => _activeController = _noteQuillController);
+    });
   }
 
   @override
@@ -43,11 +60,14 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
     _pageController.dispose();
     _dateTextController.dispose();
     _titleQuillController.dispose();
-    _noteQuillControler.dispose();
+    _noteQuillController.dispose();
   }
 
-  void _onSelectMood(String mood) {
-    setState(() => _selectedMood = mood);
+  void _onSelectMood(String mood, String moodEmoji) {
+    setState(() {
+      _selectedMood = mood;
+      _selectedMoodEmoji = moodEmoji;
+    });
   }
 
   void _onSelectActivity(MapEntry<String, String> entry) {
@@ -68,6 +88,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
 
   void _goToPreviousPage(bool condition) {
     if (!condition) return;
+    FocusScope.of(context).unfocus();
     _pageController.previousPage(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut
@@ -85,7 +106,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
       case 1:
         return _selectedActivities.isNotEmpty;
       case 2:
-        return _titleQuillController.document.toPlainText().trim().isNotEmpty && _noteQuillControler.document.toPlainText().trim().isNotEmpty;
+        return _titleQuillController.document.toPlainText().trim().isNotEmpty && _noteQuillController.document.toPlainText().trim().isNotEmpty;
       default:
         return false;
     }
@@ -132,7 +153,8 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
             ),
             NoteWriteWidget(
               titleQuillController: _titleQuillController,
-              noteQuillController: _noteQuillControler,
+              noteQuillController: _noteQuillController,
+              activeController: _activeController,
               titleFocusNode: _titleFocusNode,
               noteFocusNode: _noteFocusNode,
               isKeyboardUp: MediaQuery.of(context).viewInsets.bottom > 0

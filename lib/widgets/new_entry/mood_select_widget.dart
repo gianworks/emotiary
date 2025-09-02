@@ -14,7 +14,7 @@ class MoodSelectWidget extends StatelessWidget {
   final TextEditingController dateTextController;
   final String selectedMood;
 
-  final Function(String mood) onSelectMood;
+  final Function(String mood, String moodEmoji) onSelectMood;
 
   MoodSelectWidget({ 
     super.key, 
@@ -63,13 +63,13 @@ class MoodSelectWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           spacing: 20,
-          children: _moods.entries.map((entry) {
-            final String mood = entry.key;
-            final String emoji = entry.value;
+          children: _moods.entries.map((MapEntry<String, String> mapEntry) {
+            final String mood = mapEntry.key;
+            final String moodEmoji = mapEntry.value;
             final bool isSelected = selectedMood == mood;
 
             return GestureDetector(
-              onTap: () => onSelectMood(mood),
+              onTap: () => onSelectMood(mood, moodEmoji),
               child: AnimatedOpacity(
                 opacity: (isSelected) ? 1 : 0.5,
                 curve: Curves.easeInOut,
@@ -80,7 +80,7 @@ class MoodSelectWidget extends StatelessWidget {
                   duration: const Duration(milliseconds: 300),
                   child: Column(
                     children: [
-                      Text(emoji, style: TextStyle(fontSize: 42)),
+                      Text(moodEmoji, style: TextStyle(fontSize: 42)),
                       Text(mood, style: TextStyle(fontSize: 16, color: AppColors.brown))
                     ]
                   )

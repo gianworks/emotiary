@@ -12,12 +12,16 @@ class ActivitySelectWidget extends StatelessWidget {
     "Art": "🎨",
     "Relaxing": "🧘‍♀️",
     "Reading": "📚",
+    "Writing": "✍️",
     "Eating": "🍽️",
     "Cooking": "🍳",
     "Watching": "🖥️",
     "Cleaning": "🧹",
     "Shopping": "🛍️",
     "Friends": "👥",
+    "Family": "👪",
+    "Party": "🥳",
+    "Socializing": "🗣️",
     "Other": "🚩"
   };
 
@@ -35,20 +39,21 @@ class ActivitySelectWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const SizedBox(height: 50),
-        Text("What have you been up to?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.veryDarkBrown)),
-        const SizedBox(height: 10),
-        Expanded(
-          child: GridView.count(
+    return SingleChildScrollView(
+      physics: NeverScrollableScrollPhysics(),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 100),
+          Text("What have you been up to?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.veryDarkBrown)),
+          const SizedBox(height: 40),
+          GridView.count(
             shrinkWrap: true,
-            crossAxisCount: 4,
-            childAspectRatio: 0.75,
+            crossAxisCount: 5,
+            childAspectRatio: 0.7,
             physics: NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.all(30),
+            padding: EdgeInsets.symmetric(horizontal: 20),
             children: _activities.entries.map((entry) {
               final String activity = entry.key;
               final String emoji = entry.value;
@@ -56,35 +61,35 @@ class ActivitySelectWidget extends StatelessWidget {
 
               return GestureDetector(
                 onTap: () => (!isSelected) ? onSelectActivity(entry) : onUnselectActivity(entry),
-                child: Center(
-                  child: AnimatedScale(
-                    scale: (isSelected) ? 1.1 : 1,
-                    curve: Curves.easeInOut,
-                    duration: const Duration(milliseconds: 300),
-                    child: Column(
-                      children: [
-                        AnimatedContainer(
-                          width: 55,
-                          height: 55,
-                          duration: const Duration(milliseconds: 300),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle, 
-                            color: (isSelected) ? AppColors.almond : Colors.white, 
-                            border: Border.all(width: 1, color: AppColors.almond)
-                          ),
-                          child: Center(child: Text(emoji, style: TextStyle(fontSize: 32)))
+                child: AnimatedScale(
+                  scale: (isSelected) ? 1.05 : 1,
+                  curve: Curves.easeInOut,
+                  duration: const Duration(milliseconds: 300),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      AnimatedContainer(
+                        width: 55,
+                        height: 55,
+                        duration: const Duration(milliseconds: 300),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle, 
+                          color: (isSelected) ? AppColors.almond : Colors.white, 
+                          border: Border.all(width: 1, color: AppColors.almond)
                         ),
-                        const SizedBox(height: 10),
-                        Text(activity, style: TextStyle(fontSize: 16, color: AppColors.brown))
-                      ]
-                    )
+                        child: Center(child: Text(emoji, style: TextStyle(fontSize: 32)))
+                      ),
+                      const SizedBox(height: 10),
+                      Text(activity, style: TextStyle(fontSize: 14, color: AppColors.brown))
+                    ]
                   )
                 )
               );
             }).toList()
           )
-        )
-      ]
+        ]
+      )
     );
   }
 }
