@@ -9,4 +9,6 @@ class AppColors {
   static const Color sienna = Color(0xFFA0522D);
   static const Color saddleBrown = Color(0xFF8B4513);
   static const Color veryDarkBrown = Color(0xFF3E2723);
+  static const Color whiteSmoke = Color(0xFFF9F9F9);
+  static const Color gainsboro = Color(0xFFE8E8E8);
 }

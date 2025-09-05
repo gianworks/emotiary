@@ -16,7 +16,6 @@ class AppTheme {
         fontWeight: FontWeight.w700, 
         color: AppColors.veryDarkBrown
       ),
-      shape: Border(bottom: BorderSide(color: AppColors.tan)),
       backgroundColor: AppColors.beige
     )
   );

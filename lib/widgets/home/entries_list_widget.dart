@@ -6,8 +6,9 @@ import "package:emotiary/theme/app_colors.dart";
 
 class EntriesListWidget extends StatelessWidget {
   final List<Entry> entries;
+  final Function(Entry) onSelectEntry;
 
-  const EntriesListWidget({ super.key, required this.entries });
+  const EntriesListWidget({ super.key, required this.entries, required this.onSelectEntry });
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +42,10 @@ class EntriesListWidget extends StatelessWidget {
                 side: BorderSide(width: 1, color: AppColors.tan),
                 borderRadius: BorderRadius.circular(12),
               ),
+              color: Colors.white,
               clipBehavior: Clip.antiAlias,
               child: InkWell(
-                onTap: () {},
+                onTap: () => onSelectEntry(entry),
                 child: Container(
                   padding: EdgeInsets.all(20),
                   child: Column(
@@ -76,7 +78,7 @@ class EntriesListWidget extends StatelessWidget {
                             showCursor: false,
                             customStyles: DefaultStyles(
                               paragraph: DefaultTextBlockStyle(
-                                TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.veryDarkBrown),
+                                TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.veryDarkBrown),
                                 HorizontalSpacing(0, 0),
                                 VerticalSpacing(0, 0),
                                 VerticalSpacing(0, 0),
@@ -91,7 +93,8 @@ class EntriesListWidget extends StatelessWidget {
                         child: QuillEditor.basic(
                           controller: noteQuillController,
                           config: QuillEditorConfig(
-                            scrollable: false,
+                            maxHeight: 80,
+                            scrollable: true,
                             expands: false,
                             showCursor: false,
                             customStyles: DefaultStyles(
@@ -114,14 +117,10 @@ class EntriesListWidget extends StatelessWidget {
                           final String activity = mapEntry.key;
                           final String activityEmoji = mapEntry.value;
 
-                          return Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2.5),
-                            height: 25,
-                            decoration: BoxDecoration(
-                              color: AppColors.sand,
-                              borderRadius: BorderRadius.circular(16)
-                            ),
-                            child: Text("$activityEmoji $activity", style: TextStyle(fontSize: 14, color: AppColors.saddleBrown))
+                          return Ink(
+                            padding: EdgeInsets.symmetric(vertical: 2.5, horizontal: 10),
+                            decoration: BoxDecoration(color: AppColors.sand, borderRadius: BorderRadius.circular(16)),
+                            child: Text("$activityEmoji $activity", style: TextStyle(fontSize: 12, color: AppColors.saddleBrown))
                           );
                         }).toList(),
                       )
