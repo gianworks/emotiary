@@ -10,8 +10,9 @@ class HomeScreen extends StatefulWidget {
   final PanelController panelController;
 
   final Function(Widget) onOpenPanel;
+  final Function(Entry) onDeleteEntry;
 
-  const HomeScreen({ super.key, required this.entries, required this.panelController, required this.onOpenPanel });
+  const HomeScreen({ super.key, required this.entries, required this.panelController, required this.onOpenPanel, required this.onDeleteEntry });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -20,7 +21,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   void _onSelectEntry(Entry entry) {
     widget.panelController.animatePanelToPosition(1, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
-    widget.onOpenPanel(EntryDetailsWidget(entry: entry, panelController: widget.panelController));
+    widget.onOpenPanel(
+      EntryDetailsWidget(entry: entry, panelController: widget.panelController, onDeleteEntry: widget.onDeleteEntry)
+    );
   }
 
   @override

@@ -9,8 +9,34 @@ class EntryDetailsWidget extends StatelessWidget {
   final Entry entry;
   final PanelController panelController;
 
-  const EntryDetailsWidget({ super.key, required this.entry, required this.panelController });
-  
+  final Function(Entry) onDeleteEntry;
+
+  const EntryDetailsWidget({ super.key, required this.entry, required this.panelController, required this.onDeleteEntry });
+
+  void _showDeleteDialog(BuildContext context) {
+    showDialog(
+      context: context, 
+      builder: (_) => AlertDialog(
+        title: Text("Delete Entry"),
+        content: Text("Are you sure you want to delete this entry? This process cannot be undone."),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, "Cancel"),
+            child: Text("Cancel", style: TextStyle(color: Colors.blue))
+          ),
+          TextButton(
+            onPressed: () { 
+              onDeleteEntry(entry);
+              Navigator.pop(context, "Delete"); 
+              panelController.close();
+            },
+            child: Text("Delete", style: TextStyle(color: Colors.red))
+          ),
+        ]
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final QuillController titleQuillController = QuillController(
@@ -134,7 +160,16 @@ class EntryDetailsWidget extends StatelessWidget {
                 )
               )
             )
-          )
+          ),
+          const SizedBox(height: 10),
+          Center(
+            child: TextButton.icon(
+              icon: Icon(Icons.delete, size: 24, color: AppColors.sienna),
+              label: Text("Delete", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.sienna)),
+              onPressed: () => _showDeleteDialog(context)
+            )
+          ),
+          const SizedBox(height: 70)
         ]
       )
     );

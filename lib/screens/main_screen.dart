@@ -16,16 +16,15 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final PageController _pageController = PageController();
-  final PanelController _panelController = PanelController();
-
   final Map<String, IconData> _icons = {
     "Home": Icons.home,
     "Insights": Icons.bar_chart_rounded
   };
 
+  final PageController _pageController = PageController();
+  final PanelController _panelController = PanelController();
+
   int _bottomNavIndex = 0;
-  
   List<Entry> _entries = [];
   Widget _slidingPanelContent = SizedBox.shrink();
 
@@ -51,6 +50,11 @@ class _MainScreenState extends State<MainScreen> {
     setState(() => _slidingPanelContent = panelContent);
   }
 
+  void _onDeleteEntry(Entry entry) async {
+    entry.delete();
+    setState(() => _entries = EntryRepository.getAllEntries());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -60,7 +64,7 @@ class _MainScreenState extends State<MainScreen> {
             controller: _pageController,
             physics: NeverScrollableScrollPhysics(),
             children: [
-              HomeScreen(entries: _entries, panelController: _panelController, onOpenPanel: _onOpenPanel),
+              HomeScreen(entries: _entries, panelController: _panelController, onOpenPanel: _onOpenPanel, onDeleteEntry: _onDeleteEntry),
               InsightsScreen()
             ]
           ),
