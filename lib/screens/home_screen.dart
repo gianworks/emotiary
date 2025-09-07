@@ -2,8 +2,8 @@ import "package:flutter/material.dart";
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import "package:emotiary/models/entry.dart";
 import "package:emotiary/theme/app_colors.dart";
-import "package:emotiary/widgets/home/entries_list_widget.dart";
-import "package:emotiary/widgets/home/entry_details_widget.dart";
+import "package:emotiary/widgets/home_screen/entries_list_widget.dart";
+import "package:emotiary/widgets/home_screen/entry_details_widget.dart";
 
 class HomeScreen extends StatefulWidget {    
   final List<Entry> entries;

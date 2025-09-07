@@ -5,9 +5,9 @@ import "package:emotiary/theme/app_colors.dart";
 import "package:emotiary/utils/date_time_utils.dart";
 import "package:emotiary/models/entry.dart";
 import "package:emotiary/repositories/entry_repository.dart";
-import "package:emotiary/widgets/new_entry/mood_select_widget.dart";
-import "package:emotiary/widgets/new_entry/activity_select_widget.dart";
-import "package:emotiary/widgets/new_entry/note_write_widget.dart";
+import "package:emotiary/widgets/new_entry_screen/mood_select_widget.dart";
+import "package:emotiary/widgets/new_entry_screen/activity_select_widget.dart";
+import "package:emotiary/widgets/new_entry_screen/note_write_widget.dart";
 
 class NewEntryScreen extends StatefulWidget {
   const NewEntryScreen({super.key});
