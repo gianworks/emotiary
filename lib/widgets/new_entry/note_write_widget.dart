@@ -5,7 +5,6 @@ import "package:emotiary/theme/app_colors.dart";
 class NoteWriteWidget extends StatelessWidget {
   final QuillController titleQuillController;
   final QuillController noteQuillController;
-
   final QuillController activeController;
 
   final FocusNode titleFocusNode;
@@ -28,86 +27,89 @@ class NoteWriteWidget extends StatelessWidget {
     return Scaffold(
       body: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
-        child: Column(
-          children: [
-            const SizedBox(height: 40),
-            Center(
-              child: Container(
-                width: 360,
-                height: 400,
-                padding: EdgeInsets.all(20),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 50),
+              Text("What would you call this entry?", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.veryDarkBrown)),
+              const SizedBox(height: 10),
+              Container(
+                height: 45,
+                padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.white, 
                   border: Border.all(width: 1, color: AppColors.tan),
-                  borderRadius: BorderRadius.circular(8)
+                  borderRadius: BorderRadius.all(Radius.circular(8))
                 ),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 30,
-                      child: QuillEditor.basic(
-                        controller: titleQuillController,
-                        focusNode: titleFocusNode,
-                        config: QuillEditorConfig(
-                          autoFocus: true,
-                          scrollable: true,
-                          expands:  true,
-                          placeholder: "Add title..",
-                          customStyles: DefaultStyles(
-                            paragraph: DefaultTextBlockStyle(
-                              TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.veryDarkBrown),
-                              HorizontalSpacing(0, 0),
-                              VerticalSpacing(0, 0),
-                              VerticalSpacing(0, 0),
-                              null
-                            ),
-                            placeHolder: DefaultTextBlockStyle(
-                              TextStyle(fontSize: 20, color: Colors.grey),
-                              HorizontalSpacing(0, 0),
-                              VerticalSpacing(0, 0),
-                              VerticalSpacing(0, 0),
-                              null
-                            )
-                          )
-                        )
+                child: QuillEditor.basic(
+                  controller: titleQuillController,
+                  focusNode: titleFocusNode,
+                  config: QuillEditorConfig(
+                    autoFocus: true,
+                    scrollable: true,
+                    expands:  true,
+                    placeholder: "Add a title..",
+                    customStyles: DefaultStyles(
+                      paragraph: DefaultTextBlockStyle(
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.veryDarkBrown),
+                        HorizontalSpacing(0, 0),
+                        VerticalSpacing(0, 0),
+                        VerticalSpacing(0, 0),
+                        null
+                      ),
+                      placeHolder: DefaultTextBlockStyle(
+                        TextStyle(fontSize: 16, color: Colors.grey[400]),
+                        HorizontalSpacing(0, 0),
+                        VerticalSpacing(0, 0),
+                        VerticalSpacing(0, 0),
+                        null
                       )
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 10, bottom: 20),
-                      height: 1,
-                      width: double.infinity,
-                      color: AppColors.tan,
-                    ),
-                    Expanded(
-                      child: QuillEditor.basic(
-                        controller: noteQuillController,
-                        focusNode: noteFocusNode,
-                        config: QuillEditorConfig(
-                          placeholder: "Add note..",
-                          customStyles: DefaultStyles(
-                            paragraph: DefaultTextBlockStyle(
-                              TextStyle(fontSize: 16, color: AppColors.brown),
-                              HorizontalSpacing(0, 0),
-                              VerticalSpacing(0, 0),
-                              VerticalSpacing(0, 0),
-                              null
-                            ),
-                            placeHolder: DefaultTextBlockStyle(
-                              TextStyle(fontSize: 16, color: Colors.grey),
-                              HorizontalSpacing(0, 0),
-                              VerticalSpacing(0, 0),
-                              VerticalSpacing(0, 0),
-                              null
-                            )
-                          )
-                        )
-                      )
-                    ) 
-                  ]
+                    )
+                  )
                 )
-              )
-            )
-          ]
+              ),
+              const SizedBox(height: 20),
+              Text("What's on your mind today?", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.veryDarkBrown)),
+              const SizedBox(height: 10),
+              Container(
+                height: 200,
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white, 
+                  border: Border.all(width: 1, color: AppColors.tan),
+                  borderRadius: BorderRadius.all(Radius.circular(8))
+                ),
+                child: QuillEditor.basic(
+                  controller: noteQuillController,
+                  focusNode: noteFocusNode,
+                  config: QuillEditorConfig(
+                    scrollable: true,
+                    expands:  true,
+                    placeholder: "Add a note..",
+                    customStyles: DefaultStyles(
+                      paragraph: DefaultTextBlockStyle(
+                        TextStyle(fontSize: 16, color: AppColors.veryDarkBrown),
+                        HorizontalSpacing(0, 0),
+                        VerticalSpacing(0, 0),
+                        VerticalSpacing(0, 0),
+                        null
+                      ),
+                      placeHolder: DefaultTextBlockStyle(
+                        TextStyle(fontSize: 16, color: Colors.grey[400]),
+                        HorizontalSpacing(0, 0),
+                        VerticalSpacing(0, 0),
+                        VerticalSpacing(0, 0),
+                        null
+                      )
+                    )
+                  )
+                )
+              ),
+            ]
+          )
         )
       ),
       bottomSheet: (isKeyboardUp) ? QuillSimpleToolbar(

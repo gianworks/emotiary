@@ -129,6 +129,8 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool hasNextPage = (_currentPage < _lastPage);
+
     return PopScope(
       canPop: (_currentPage <= 0),
       onPopInvokedWithResult: (didPop, _) => _goToPreviousPage(!didPop),
@@ -143,9 +145,10 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                 curve: Curves.easeInOut,
                 offset: (_canShowDoneButton()) ? Offset(0, 0) : Offset(2, 0),
                 child: TextButton.icon(
-                  icon: Icon((_currentPage < _lastPage) ? Icons.check_circle_rounded : Icons.save_rounded, size: 24, color: AppColors.sienna),
-                  label: Text((_currentPage < _lastPage) ? "Done" : "Save", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.sienna)),
-                  onPressed: () => (_currentPage < _lastPage) ? _goToNextPage(_canShowDoneButton()) : _saveEntry()
+                  style: TextButton.styleFrom(foregroundColor: AppColors.sienna),
+                  icon: Icon((hasNextPage) ? Icons.check_circle_rounded : Icons.save_rounded, size: 24),
+                  label: Text((hasNextPage) ? "Done" : "Save", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                  onPressed: () => (hasNextPage) ? _goToNextPage(_canShowDoneButton()) : _saveEntry()
                 )
               )
             )

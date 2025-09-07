@@ -35,8 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: EdgeInsets.symmetric(horizontal: 20),
         children: [
           const SizedBox(height: 50),
-          Text("Your Journal Entries", style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: AppColors.veryDarkBrown)),
-          const SizedBox(height: 20),
+          Text("Journal Entries", style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: AppColors.veryDarkBrown)),
+          const SizedBox(height: 10),
           if (widget.entries.isNotEmpty) ...[
             EntriesListWidget(entries: widget.entries, onSelectEntry: _onSelectEntry)
           ]

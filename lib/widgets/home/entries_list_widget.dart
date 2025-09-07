@@ -37,7 +37,7 @@ class EntriesListWidget extends StatelessWidget {
             );
 
             return Card(
-              margin: EdgeInsets.symmetric(vertical: 5),
+              margin: EdgeInsets.symmetric(vertical: 10),
               shape: RoundedRectangleBorder(
                 side: BorderSide(width: 1, color: AppColors.tan),
                 borderRadius: BorderRadius.circular(12),
@@ -47,7 +47,7 @@ class EntriesListWidget extends StatelessWidget {
               child: InkWell(
                 onTap: () => onSelectEntry(entry),
                 child: Container(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.all(15),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,17 +68,18 @@ class EntriesListWidget extends StatelessWidget {
                           )
                         ]
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 5),
                       IgnorePointer(
                         child: QuillEditor.basic(
                           controller: titleQuillController,
                           config: QuillEditorConfig(
-                            scrollable: false,
+                            maxHeight: 40,
+                            scrollable: true,
                             expands: false,
                             showCursor: false,
                             customStyles: DefaultStyles(
                               paragraph: DefaultTextBlockStyle(
-                                TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.veryDarkBrown),
+                                TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.veryDarkBrown),
                                 HorizontalSpacing(0, 0),
                                 VerticalSpacing(0, 0),
                                 VerticalSpacing(0, 0),
@@ -88,12 +89,12 @@ class EntriesListWidget extends StatelessWidget {
                           )
                         )
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 5),
                       IgnorePointer(
                         child: QuillEditor.basic(
                           controller: noteQuillController,
                           config: QuillEditorConfig(
-                            maxHeight: 80,
+                            maxHeight: 75,
                             scrollable: true,
                             expands: false,
                             showCursor: false,

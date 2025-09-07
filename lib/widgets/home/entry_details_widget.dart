@@ -17,12 +17,12 @@ class EntryDetailsWidget extends StatelessWidget {
     showDialog(
       context: context, 
       builder: (_) => AlertDialog(
-        title: Text("Delete Entry"),
-        content: Text("Are you sure you want to delete this entry? This process cannot be undone."),
+        title: Text("Delete Entry", style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.veryDarkBrown)),
+        content: Text("Are you sure you want to delete this entry? This process cannot be undone.", style: TextStyle(color: AppColors.brown)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, "Cancel"),
-            child: Text("Cancel", style: TextStyle(color: Colors.blue))
+            child: Text("Cancel", style: TextStyle(fontWeight: FontWeight.w500, color: AppColors.sienna))
           ),
           TextButton(
             onPressed: () { 
@@ -30,7 +30,7 @@ class EntryDetailsWidget extends StatelessWidget {
               Navigator.pop(context, "Delete"); 
               panelController.close();
             },
-            child: Text("Delete", style: TextStyle(color: Colors.red))
+            child: Text("Delete", style: TextStyle(fontWeight: FontWeight.w500, color: AppColors.sienna))
           ),
         ]
       )
@@ -58,17 +58,16 @@ class EntryDetailsWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            height: 4.5,
-            width: 35,
-            margin: EdgeInsets.only(top: 10),
-            decoration: BoxDecoration(color: Colors.grey[400], borderRadius: BorderRadius.circular(12))
+            width: 33,
+            height: 5,
+            margin: EdgeInsets.only(top: 12.5),
+            decoration: BoxDecoration(color: AppColors.almond, borderRadius: BorderRadius.circular(12))
           ),
           const SizedBox(height: 20),
           Expanded(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 30),
+              padding: EdgeInsets.symmetric(horizontal: 25),
               child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +88,7 @@ class EntryDetailsWidget extends StatelessWidget {
                         )
                       ]
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 20),
                     IgnorePointer(
                       child: QuillEditor.basic(
                         controller: titleQuillController,
@@ -99,7 +98,7 @@ class EntryDetailsWidget extends StatelessWidget {
                           showCursor: false,
                           customStyles: DefaultStyles(
                             paragraph: DefaultTextBlockStyle(
-                              TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.veryDarkBrown),
+                              TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.veryDarkBrown),
                               HorizontalSpacing(0, 0),
                               VerticalSpacing(0, 0),
                               VerticalSpacing(0, 0),
@@ -112,7 +111,7 @@ class EntryDetailsWidget extends StatelessWidget {
                     const SizedBox(height: 10),
                     Container(
                       constraints: BoxConstraints(minHeight: 100),
-                      padding: EdgeInsets.all(15),
+                      padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: AppColors.whiteSmoke, 
                         border: Border.all(color: AppColors.gainsboro), 
@@ -139,8 +138,8 @@ class EntryDetailsWidget extends StatelessWidget {
                       )
                     ),
                     const SizedBox(height: 20),
-                    Text("Activities", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.veryDarkBrown)),
-                    const SizedBox(height: 7.5),
+                    Text("Activities", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.veryDarkBrown)),
+                    const SizedBox(height: 10),
                     Wrap(
                       spacing: 10,
                       runSpacing: 10,
@@ -149,27 +148,33 @@ class EntryDetailsWidget extends StatelessWidget {
                         final String activityEmoji = mapEntry.value;
 
                         return Container(
-                          padding: EdgeInsets.symmetric(vertical: 2.5, horizontal: 10),
+                          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                           decoration: BoxDecoration(color: AppColors.sand, borderRadius: BorderRadius.circular(16)),
                           child: Text("$activityEmoji $activity", style: TextStyle(fontSize: 14, color: AppColors.saddleBrown))
                         );
                       }).toList(),
                     ),
-                    const SizedBox(height: 100)
+                    const SizedBox(height: 10)
                   ]
                 )
               )
             )
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 20),
           Center(
             child: TextButton.icon(
-              icon: Icon(Icons.delete, size: 24, color: AppColors.sienna),
-              label: Text("Delete", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.sienna)),
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.sienna,
+                side: BorderSide(width: 1, color: AppColors.sienna),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5)
+              ),
+              icon: Icon(Icons.delete, size: 24),
+              label: Text("Delete", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
               onPressed: () => _showDeleteDialog(context)
             )
           ),
-          const SizedBox(height: 70)
+          const SizedBox(height: 60)
         ]
       )
     );

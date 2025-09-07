@@ -10,19 +10,14 @@ class ActivitySelectWidget extends StatelessWidget {
     "Nature": "🌳",
     "Gaming": "🎮",
     "Art": "🎨",
-    "Relaxing": "🧘‍♀️",
-    "Reading": "📚",
+    "Reading": "📖",
+    "Studying": "📚",
     "Writing": "✍️",
-    "Eating": "🍽️",
-    "Cooking": "🍳",
-    "Watching": "🖥️",
-    "Cleaning": "🧹",
     "Shopping": "🛍️",
-    "Friends": "👥",
-    "Family": "👪",
-    "Party": "🥳",
-    "Socializing": "🗣️",
-    "Other": "🚩"
+    "Cooking": "🍳",
+    "Eating": "🍽️",
+    "Watching": "🖥️",
+    "Other": "🚩",
   };
 
   final Map<String, String> selectedActivities;
@@ -30,12 +25,7 @@ class ActivitySelectWidget extends StatelessWidget {
   final Function(MapEntry<String, String> activity) onSelectActivity;
   final Function(MapEntry<String, String> activity) onUnselectActivity;
 
-  ActivitySelectWidget({ 
-    super.key,
-    required this.selectedActivities, 
-    required this.onSelectActivity,
-    required this.onUnselectActivity
-  });
+  ActivitySelectWidget({ super.key, required this.selectedActivities, required this.onSelectActivity, required this.onUnselectActivity});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +35,7 @@ class ActivitySelectWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 100),
+          const SizedBox(height: 150),
           Text("What have you been up to?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.veryDarkBrown)),
           const SizedBox(height: 40),
           GridView.count(
@@ -70,17 +60,18 @@ class ActivitySelectWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       AnimatedContainer(
-                        width: 55,
-                        height: 55,
+                        width: 50,
+                        height: 50,
+                        curve: Curves.easeInOut,
                         duration: const Duration(milliseconds: 300),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle, 
-                          color: (isSelected) ? AppColors.almond : Colors.white, 
-                          border: Border.all(width: 1, color: AppColors.almond)
+                          color: (isSelected) ? AppColors.almond : AppColors.beige, 
+                          border: Border.all(width: 1, color: (isSelected) ? AppColors.sienna : AppColors.almond)
                         ),
-                        child: Center(child: Text(emoji, style: TextStyle(fontSize: 32)))
+                        child: Center(child: Text(emoji, style: TextStyle(fontSize: 24)))
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 7.5),
                       Text(activity, style: TextStyle(fontSize: 14, color: AppColors.brown))
                     ]
                   )

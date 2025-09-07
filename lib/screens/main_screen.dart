@@ -85,10 +85,9 @@ class _MainScreenState extends State<MainScreen> {
             splashColor: Colors.transparent,
             tabBuilder: (int index, bool isActive) {
               return Column(
-                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 5),
                   Icon(_icons.values.elementAt(index), size: 30, color: isActive ? AppColors.veryDarkBrown : Colors.grey),
                   Text(_icons.keys.elementAt(index), style: TextStyle(fontSize: 12, color: isActive ? AppColors.veryDarkBrown : Colors.grey))
                 ]

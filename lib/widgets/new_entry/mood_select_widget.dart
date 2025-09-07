@@ -16,12 +16,7 @@ class MoodSelectWidget extends StatelessWidget {
 
   final Function(String mood, String moodEmoji) onSelectMood;
 
-  MoodSelectWidget({ 
-    super.key, 
-    required this.dateTextController, 
-    required this.selectedMood,
-    required this.onSelectMood 
-  });
+  MoodSelectWidget({ super.key, required this.dateTextController, required this.selectedMood, required this.onSelectMood });
 
   Future<void> _onSelectDate(BuildContext context) async {
     DateTime? selectedDate = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(2000), lastDate: DateTime(2100));
@@ -36,25 +31,23 @@ class MoodSelectWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const SizedBox(height: 170),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(Icons.date_range_rounded, color: AppColors.saddleBrown),
-            SizedBox(
-              width: 160,
-              child: TextField(
-                controller: dateTextController,
-                readOnly: true,
-                enableInteractiveSelection: false,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(border: InputBorder.none),
-                style: TextStyle(fontSize: 16, color: AppColors.saddleBrown),
-                onTap: () => _onSelectDate(context)
-              )
+        SizedBox(
+          width: 210,
+          child: TextField(
+            controller: dateTextController,
+            readOnly: true,
+            enableInteractiveSelection: false,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16, color: AppColors.saddleBrown),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              prefixIcon: Icon(Icons.date_range_rounded, color: AppColors.saddleBrown),
+              suffixIcon: Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.saddleBrown),
+              prefixIconConstraints: BoxConstraints(minHeight: 32, minWidth: 32),
+              suffixIconConstraints: BoxConstraints(minHeight: 16, minWidth: 16)
             ),
-            Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.saddleBrown)
-          ]
+            onTap: () => _onSelectDate(context)
+          )
         ),
         const SizedBox(height: 20),
         Text("How are you feeling?", style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600, color: AppColors.veryDarkBrown)),
