@@ -65,7 +65,7 @@ class _MainScreenState extends State<MainScreen> {
             physics: NeverScrollableScrollPhysics(),
             children: [
               HomeScreen(entries: _entries, panelController: _panelController, onOpenPanel: _onOpenPanel, onDeleteEntry: _onDeleteEntry),
-              InsightsScreen()
+              InsightsScreen(entries: _entries)
             ]
           ),
           floatingActionButton: FloatingActionButton(
