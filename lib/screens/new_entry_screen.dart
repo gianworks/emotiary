@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:icons_plus/icons_plus.dart";
 import "package:emotiary/screens/new_entry/mood_selection_screen.dart";
+import "package:emotiary/screens/new_entry/activity_selection_screen.dart";
 import "package:emotiary/theme/app_colors.dart";
 import "package:emotiary/theme/app_text_styles.dart";
 
@@ -16,7 +17,8 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
 
   int _currentPageIndex = 0;
 
-  late MapEntry<String, String> mood;
+  late MapEntry<String, String> entryMood;
+  late Map<String, String> entryActivities;
 
   void _onPageChanged(int index) => setState(() => _currentPageIndex = index);
 
@@ -33,12 +35,17 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
   Widget build(BuildContext context) {
     final List<Widget> screens = [
       MoodSelectionScreen(
-        onFinished: (MapEntry<String, String> mood) {
-          setState(() => this.mood = mood);
+        onFinished: (MapEntry<String, String> selectedMood) {
+          setState(() => entryMood = selectedMood);
           _goToNextPage();
         }
       ),
-      SizedBox(),
+      ActivitySelectionScreen(
+        onFinished: (Map<String, String> selectedActivities) {
+          setState(() => entryActivities = selectedActivities);
+          _goToNextPage();
+        },
+      ),
       SizedBox()
     ];
 
