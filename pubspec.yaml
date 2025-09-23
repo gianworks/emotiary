@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   icons_plus: ^5.0.0
+  flutter_quill: ^11.4.2
 
 dev_dependencies:
   flutter_test:
