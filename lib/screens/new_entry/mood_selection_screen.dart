@@ -15,7 +15,7 @@ class MoodSelectionScreen extends StatefulWidget {
   State<MoodSelectionScreen> createState() => _MoodSelectionScreenState();
 }
 
-class _MoodSelectionScreenState extends State<MoodSelectionScreen> with AutomaticKeepAliveClientMixin  {
+class _MoodSelectionScreenState extends State<MoodSelectionScreen> with AutomaticKeepAliveClientMixin {
   static const Map<String, String> _moods = {
     "Awful": "😞",
     "Down": "☹️",

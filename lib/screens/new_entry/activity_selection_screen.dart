@@ -17,7 +17,7 @@ class ActivitySelectionScreen extends StatefulWidget {
   State<ActivitySelectionScreen> createState() => _ActivitySelectionScreenState();
 }
 
-class _ActivitySelectionScreenState extends State<ActivitySelectionScreen> with AutomaticKeepAliveClientMixin  {
+class _ActivitySelectionScreenState extends State<ActivitySelectionScreen> with AutomaticKeepAliveClientMixin {
   static const Map<String, String> _activities = {
     "Work": "💼",
     "Study": "📚",
@@ -63,7 +63,7 @@ class _ActivitySelectionScreenState extends State<ActivitySelectionScreen> with 
 
               return InkWell(
                 borderRadius: BorderRadius.circular(24),
-                onTap: () => (!isSelected) ? _addActivity(activity) : _removeActivity(activity),
+                onTap: () => (isSelected) ? _removeActivity(activity) : _addActivity(activity),
                 child: Column(
                   children: [
                     Text(activity.value, style: TextStyle(fontSize: 32)),
@@ -75,13 +75,13 @@ class _ActivitySelectionScreenState extends State<ActivitySelectionScreen> with 
                       height: 16,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: (!isSelected) ? null : AppColors.brownSugar,
+                        color: (isSelected) ? AppColors.brownSugar : null,
                         border: Border.all(
                           width: 1,
-                          color: (!isSelected) ? AppColors.darkBrown : AppColors.brownSugar
+                          color: (isSelected) ? AppColors.brownSugar : AppColors.darkBrown
                         )
                       ),
-                      child: (!isSelected) ? null : Icon(FontAwesome.check_solid, size: 10, color: Colors.white)
+                      child: (isSelected) ? Icon(FontAwesome.check_solid, size: 10, color: Colors.white) : null
                     )
                   ]
                 )
@@ -92,7 +92,9 @@ class _ActivitySelectionScreenState extends State<ActivitySelectionScreen> with 
         const SizedBox(height: 8),
         PrimaryButton(
           label: "Continue",
-          onPressed: () => (_selectedActivities.isNotEmpty) ? widget.onFinished(_selectedActivities) : SnackBarHelper.show(context, "Please select at least one activity.")
+          onPressed: () => (_selectedActivities.isNotEmpty) ? widget.onFinished(
+            _selectedActivities
+          ) : SnackBarHelper.show("Please select at least one activity.", context)
         )
       ]
     );
