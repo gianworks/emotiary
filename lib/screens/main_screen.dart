@@ -1,9 +1,11 @@
 import "package:flutter/material.dart";
 import "package:icons_plus/icons_plus.dart";
+import "package:emotiary/data/models/entry.dart";
+import "package:emotiary/data/repositories/entry_repository.dart";
+import "package:emotiary/core/theme/app_colors.dart";
+import "package:emotiary/core/theme/app_text_styles.dart";
 import "package:emotiary/screens/new_entry_screen.dart";
 import "package:emotiary/widgets/bottom_app_bar_item.dart";
-import "package:emotiary/theme/app_colors.dart";
-import "package:emotiary/theme/app_text_styles.dart";
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -13,17 +15,11 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  List<Entry> _entries = EntryRepository.getAll();
   int _currentItemIndex = 0;
 
-  final List<Widget> screens = const [
-    SizedBox(),
-    SizedBox(),
-    SizedBox(),
-    SizedBox()
-  ];
-
-  void _onActionButtonPressed() {
-    Navigator.push(
+  void _onActionButtonPressed() async {
+    final dynamic result = await Navigator.push(
       context, 
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => NewEntryScreen(),
@@ -35,12 +31,21 @@ class _MainScreenState extends State<MainScreen> {
         }
       )
     );
+    if (result == null) return;
+    setState(() => _entries = EntryRepository.getAll());
   }
 
   void _onBottomAppBarItemTap(int index) => setState(() => _currentItemIndex = index);
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> screens = [
+      SizedBox(),
+      SizedBox(),
+      SizedBox(),
+      SizedBox()
+    ];
+
     return Scaffold(
       appBar: AppBar(
         forceMaterialTransparency: true,

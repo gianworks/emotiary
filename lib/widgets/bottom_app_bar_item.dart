@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
-import "package:emotiary/theme/app_colors.dart";
-import "package:emotiary/theme/app_text_styles.dart";
+import "package:emotiary/core/theme/app_colors.dart";
+import "package:emotiary/core/theme/app_text_styles.dart";
 
 class BottomAppBarItem extends StatelessWidget {
   final int index;

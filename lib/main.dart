@@ -1,9 +1,13 @@
 import "package:flutter/material.dart";
 import "package:flutter_quill/flutter_quill.dart";
-import "package:emotiary/theme/app_theme.dart";
+import "package:emotiary/core/config/hive_config.dart";
+import "package:emotiary/core/theme/app_theme.dart";
 import "package:emotiary/screens/main_screen.dart";
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await HiveConfig.init();
+
   runApp(const MainApp());
 }
 

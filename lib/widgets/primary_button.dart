@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:icons_plus/icons_plus.dart";
-import "package:emotiary/theme/app_colors.dart";
+import "package:emotiary/core/theme/app_colors.dart";
 
 class PrimaryButton extends StatelessWidget {
   final String label;

@@ -1,19 +1,19 @@
 import "dart:convert";
 import "package:flutter/material.dart";
 import "package:flutter_quill/flutter_quill.dart";
-import "package:emotiary/theme/app_colors.dart";
-import "package:emotiary/theme/app_text_styles.dart";
+import "package:emotiary/core/theme/app_colors.dart";
+import "package:emotiary/core/theme/app_text_styles.dart";
+import "package:emotiary/core/helpers/snack_bar_helper.dart";
+import "package:emotiary/core/helpers/text_block_style_helper.dart";
 import "package:emotiary/widgets/primary_button.dart";
-import "package:emotiary/utils/helpers/snack_bar_helper.dart";
-import "package:emotiary/utils/helpers/text_block_style_helper.dart";
 
 class EntryWritingScreen extends StatefulWidget {
-  final bool isKeyboardShown;
+  final bool isKeyboardVisible;
   final Function(String titleJson, String textJson) onFinished;
 
   const EntryWritingScreen({
     super.key,
-    required this.isKeyboardShown,
+    required this.isKeyboardVisible,
     required this.onFinished
   });
 
@@ -95,7 +95,7 @@ class _EntryWritingScreenState extends State<EntryWritingScreen> with AutomaticK
         ]
       ),
       backgroundColor: Colors.transparent,
-      bottomSheet: (widget.isKeyboardShown) ? QuillSimpleToolbar(
+      bottomSheet: (widget.isKeyboardVisible) ? QuillSimpleToolbar(
         controller: (_titleFocusNode.hasFocus) ? _titleQuillController : _textQuillController,
         config: const QuillSimpleToolbarConfig(
           multiRowsDisplay: false,

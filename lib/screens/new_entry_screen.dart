@@ -1,12 +1,14 @@
 import "package:flutter/material.dart";
 import "package:icons_plus/icons_plus.dart";
+import "package:emotiary/data/models/entry.dart";
+import "package:emotiary/data/repositories/entry_repository.dart";
+import "package:emotiary/core/theme/app_colors.dart";
+import "package:emotiary/core/theme/app_text_styles.dart";
+import "package:emotiary/core/utils/date_time_utils.dart";
+import "package:emotiary/core/helpers/snack_bar_helper.dart";
 import "package:emotiary/screens/new_entry/mood_selection_screen.dart";
 import "package:emotiary/screens/new_entry/activity_selection_screen.dart";
 import "package:emotiary/screens/new_entry/entry_writing_screen.dart";
-import "package:emotiary/theme/app_colors.dart";
-import "package:emotiary/theme/app_text_styles.dart";
-import "package:emotiary/utils/date_time_utils.dart";
-import "package:emotiary/utils/helpers/snack_bar_helper.dart";
 
 class NewEntryScreen extends StatefulWidget {
   const NewEntryScreen({super.key});
@@ -20,34 +22,45 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
 
   int _currentPageIndex = 0;
 
-  late MapEntry<String, String> _entryMood;
   late Map<String, String> _entryActivities;
-  late String _entryDate, _entryTitleJson, _entryTextJson;
+  late String _entryDate, _entryMood, _entryMoodEmoji, _entryTitleJson, _entryTextJson;
 
   void _onPageChanged(int index) => setState(() => _currentPageIndex = index);
 
   void _goToNextPage() => _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+  
   void _goToPreviousPage() {
     FocusScope.of(context).unfocus();
     _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
-  void _saveNewEntry() {
-    // TODO: Save the entry to a local database
-    
-    SnackBarHelper.show("Entry saved successfully.", context);
-  }
-
-  Future<void> _onDateSelect() async {
-    DateTime? dateSelected = await showDatePicker(
+  Future<void> _onSelectDate() async {
+    DateTime? selectedDate = await showDatePicker(
       context: context, 
       initialDate: DateTime.now(), 
       firstDate: DateTime(2000), 
       lastDate: DateTime(2100)
     );
     
-    if (dateSelected == null) return;
-    setState(() => _entryDate = DateTimeUtils.format(dateSelected));
+    if (selectedDate == null) return;
+    setState(() => _entryDate = DateTimeUtils.format(selectedDate));
+  }
+
+  void _saveEntry() async {
+    final Entry newEntry = Entry(
+      date: _entryDate, 
+      mood: _entryMood, 
+      moodEmoji: _entryMoodEmoji,
+      activities: _entryActivities, 
+      titleJson: _entryTitleJson, 
+      textJson: _entryTextJson
+    );
+
+    await EntryRepository.add(newEntry);
+
+    if (!mounted) return;
+    SnackBarHelper.show("Entry saved successfully.", context);
+    Navigator.pop(context, true);
   }
 
   @override
@@ -66,8 +79,9 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
   Widget build(BuildContext context) {
     final List<Widget> screens = [
       MoodSelectionScreen(
-        onFinished: (MapEntry<String, String> selectedMood) {
+        onFinished: (String selectedMood, String selectedMoodEmoji) {
           _entryMood = selectedMood;
+          _entryMoodEmoji = selectedMoodEmoji;
           _goToNextPage();
         }
       ),
@@ -78,12 +92,11 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
         },
       ),
       EntryWritingScreen(
-        isKeyboardShown: (MediaQuery.of(context).viewInsets.bottom > 0),
-        onFinished: (titleJson, textJson) {
+        isKeyboardVisible: (MediaQuery.of(context).viewInsets.bottom > 0),
+        onFinished: (String titleJson, String textJson) {
           _entryTitleJson = titleJson;
           _entryTextJson = textJson;
-          _saveNewEntry();
-          Navigator.of(context).pop();
+          _saveEntry();
         },
       )
     ];
@@ -110,7 +123,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
             style: ElevatedButton.styleFrom(foregroundColor: Colors.transparent),
             icon: Text(_entryDate, style: const TextStyle(fontSize: 16, color: AppColors.darkBrown, fontWeight: FontWeight.w500)),
             label: Icon(AntDesign.down_outline, size: 16, color: AppColors.darkBrown),
-            onPressed: _onDateSelect,
+            onPressed: _onSelectDate,
           ) : null,
           actions: [
             Padding(

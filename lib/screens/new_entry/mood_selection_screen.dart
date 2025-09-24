@@ -1,10 +1,10 @@
 import "package:flutter/material.dart";
-import "package:emotiary/theme/app_colors.dart";
-import "package:emotiary/theme/app_text_styles.dart";
+import "package:emotiary/core/theme/app_colors.dart";
+import "package:emotiary/core/theme/app_text_styles.dart";
 import "package:emotiary/widgets/primary_button.dart";
 
 class MoodSelectionScreen extends StatefulWidget {
-  final Function(MapEntry<String, String> selectedMood) onFinished;
+  final Function(String selectedMood, String selectedMoodEmoji) onFinished;
 
   const MoodSelectionScreen({
     super.key,
@@ -65,7 +65,7 @@ class _MoodSelectionScreenState extends State<MoodSelectionScreen> with Automati
         const SizedBox(height: 48),
         PrimaryButton(
           label: "Continue", 
-          onPressed: () => widget.onFinished(_selectedMood)
+          onPressed: () => widget.onFinished(_selectedMood.key, _selectedMood.value)
         )
       ]
     );

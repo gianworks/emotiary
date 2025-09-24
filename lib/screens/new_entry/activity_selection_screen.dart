@@ -1,9 +1,9 @@
 import "package:flutter/material.dart";
 import "package:icons_plus/icons_plus.dart";
-import "package:emotiary/theme/app_colors.dart";
-import "package:emotiary/theme/app_text_styles.dart";
+import "package:emotiary/core/theme/app_colors.dart";
+import "package:emotiary/core/theme/app_text_styles.dart";
+import "package:emotiary/core/helpers/snack_bar_helper.dart";
 import "package:emotiary/widgets/primary_button.dart";
-import "package:emotiary/utils/helpers/snack_bar_helper.dart";
 
 class ActivitySelectionScreen extends StatefulWidget {
   final Function(Map<String, String> selectedActivities) onFinished;
