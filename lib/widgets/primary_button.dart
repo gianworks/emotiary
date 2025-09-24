@@ -38,10 +38,10 @@ class PrimaryButton extends StatelessWidget {
           onPressed: onPressed,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text("Continue", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-              SizedBox(width: 8),
-              Icon(AntDesign.right_outline, size: 16)
+            children: [
+              Text(label, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              const SizedBox(width: 8),
+              const Icon(AntDesign.right_outline, size: 16)
             ]
           )
         )

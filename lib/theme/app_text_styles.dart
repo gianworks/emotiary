@@ -2,10 +2,6 @@ import "package:flutter/material.dart";
 import "package:emotiary/theme/app_colors.dart";
 
 class AppTextStyles {
-  static const TextStyle labelSmall = TextStyle(fontSize: 12, color: AppColors.warmGray, fontWeight: FontWeight.w400);
-  static const TextStyle labelMedium = TextStyle(fontSize: 14, color: AppColors.warmGray, fontWeight: FontWeight.w400);
-  static const TextStyle labelLarge = TextStyle(fontSize: 16, color: AppColors.warmGray, fontWeight: FontWeight.w400);
-
   static const TextStyle bodySmall = TextStyle(fontSize: 12, color: AppColors.taupeGray, fontWeight: FontWeight.w500);
   static const TextStyle bodyMedium = TextStyle(fontSize: 14, color: AppColors.taupeGray, fontWeight: FontWeight.w500);
   static const TextStyle bodyLarge = TextStyle(fontSize: 16, color: AppColors.taupeGray, fontWeight: FontWeight.w500);
