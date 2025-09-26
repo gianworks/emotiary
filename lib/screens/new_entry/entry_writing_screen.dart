@@ -63,8 +63,8 @@ class _EntryWritingScreenState extends State<EntryWritingScreen> with AutomaticK
             config: QuillEditorConfig(
               placeholder: "Title",
               customStyles: DefaultStyles(
-                paragraph: TextBlockStyleHelper.create(AppTextStyles.headlineSmall),
-                placeHolder: TextBlockStyleHelper.create(TextStyle(fontSize: 24, color: AppColors.warmGray))
+                paragraph: TextBlockStyleHelper.create(AppTextStyles.headlineMedium),
+                placeHolder: TextBlockStyleHelper.create(TextStyle(fontFamily: "Urbanist", fontSize: 24, color: AppColors.warmGray))
               )
             )
           ),
@@ -79,7 +79,7 @@ class _EntryWritingScreenState extends State<EntryWritingScreen> with AutomaticK
                 placeholder: "Write anything here..",
                 customStyles: DefaultStyles(
                   paragraph: TextBlockStyleHelper.create(AppTextStyles.bodyLarge),
-                  placeHolder: TextBlockStyleHelper.create(TextStyle(fontSize: 16, color: AppColors.warmGray))
+                  placeHolder: TextBlockStyleHelper.create(TextStyle(fontFamily: "Urbanist", fontSize: 16, color: AppColors.warmGray))
                 )
               )
             )
@@ -87,10 +87,12 @@ class _EntryWritingScreenState extends State<EntryWritingScreen> with AutomaticK
           const SizedBox(height: 48),
           PrimaryButton(
             label: "Done", 
-            onPressed: () => (isTitleNotEmpty && isTextNotEmpty) ? widget.onFinished(
+            onPressed: () => (isTitleNotEmpty && isTextNotEmpty) 
+            ? widget.onFinished(
               jsonEncode(_titleQuillController.document.toDelta().toJson()),
               jsonEncode(_textQuillController.document.toDelta().toJson())
-            ) : SnackBarHelper.show("Please add a title and text before saving.", context)
+            ) 
+            : SnackBarHelper.show("Please add a title and text before saving.", context)
           )
         ]
       ),
