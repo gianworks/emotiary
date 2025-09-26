@@ -4,6 +4,7 @@ import "package:emotiary/data/models/entry.dart";
 import "package:emotiary/data/repositories/entry_repository.dart";
 import "package:emotiary/core/theme/app_colors.dart";
 import "package:emotiary/core/theme/app_text_styles.dart";
+import "package:emotiary/core/helpers/navigation_helper.dart";
 import "package:emotiary/screens/new_entry_screen.dart";
 import "package:emotiary/screens/home_screen.dart";
 import "package:emotiary/widgets/bottom_app_bar_item.dart";
@@ -22,18 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   void _updateEntries() => setState(() => _entries = EntryRepository.getAll());
 
   void _goToNewEntryScreen() async {
-    final dynamic result = await Navigator.push(
-      context, 
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => NewEntryScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          var tween = Tween(begin: Offset(1, 0), end: Offset.zero).chain(CurveTween(curve: Curves.easeInOut));
-          var offsetAnimation = animation.drive(tween);
-
-          return SlideTransition(position: offsetAnimation, child: child);
-        }
-      )
-    );
+    final dynamic result = await NavigationHelper.push(NewEntryScreen(), context);
     if (result == null) return;
     _updateEntries();
   }

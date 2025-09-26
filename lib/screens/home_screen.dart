@@ -4,7 +4,9 @@ import "package:emotiary/core/theme/app_colors.dart";
 import "package:emotiary/core/theme/app_text_styles.dart";
 import "package:emotiary/core/utils/date_time_utils.dart";
 import "package:emotiary/core/utils/quill_utils.dart";
+import "package:emotiary/core/helpers/navigation_helper.dart";
 import "package:emotiary/data/models/entry.dart";
+import "package:emotiary/screens/home/entry_details_screen.dart";
 import "package:emotiary/widgets/primary_search_bar.dart";
 import "package:emotiary/widgets/primary_card.dart";
 
@@ -50,6 +52,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() => _groupEntriesByDate(filteredEntries));
   }
+
+  void _goToEntryDetailsScreen(Entry entry) => NavigationHelper.push(EntryDetailsScreen(entry: entry), context);
 
   @override 
   void initState() {
@@ -115,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       final Entry entry = entriesByDate[reverseIndex];
 
                       return PrimaryCard(
-                        onTap: () {},
+                        onTap: () => _goToEntryDetailsScreen(entry),
                         content: Row(
                           children: [
                             const SizedBox(width: 8),
@@ -126,44 +130,36 @@ class _HomeScreenState extends State<HomeScreen> {
                               ]
                             ),
                             const SizedBox(width: 24),
-                            IgnorePointer(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    width: 200,
-                                    height: 20,
-                                    child: Text(
+                            SizedBox(
+                              width: 200,
+                              child: IgnorePointer(
+                                child : Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
                                       QuillUtils.jsonToPlainText(entry.titleJson), 
                                       style: AppTextStyles.titleSmall,
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1
-                                    )
-                                  ),
-                                  const SizedBox(height: 4),
-                                  SizedBox(
-                                    width: 200,
-                                    height: 40,
-                                    child: Text(
-                                      QuillUtils.jsonToPlainText(entry.textJson), 
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      QuillUtils.jsonToPlainText(entry.textJson).trim(), 
                                       style: AppTextStyles.bodyMedium, 
                                       overflow: TextOverflow.ellipsis,
-                                      maxLines: 2
-                                    )
-                                  ),
-                                  const SizedBox(height: 8),
-                                  SizedBox(
-                                    width: 200,
-                                    child: Wrap(
+                                      maxLines: 4
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Wrap(
                                       spacing: 8,
                                       runSpacing: 8,
                                       children: entry.activities.entries.map(
                                         (activity) => Text("${activity.value} ${activity.key.toLowerCase()}", style: AppTextStyles.bodyMedium)
                                       ).toList()
                                     )
-                                  )
-                                ]
+                                  ]
+                                )
                               )
                             ),
                             const SizedBox(width: 32),
@@ -186,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ] 
         else if (_groupedEntries.isEmpty) ...[
           const SizedBox(height: 128),
-          const Text("Nothing matches your search.\nTry another title, mood, or activity.", style: AppTextStyles.bodyMedium, textAlign: TextAlign.center)
+          const Text("No matches found.\nMaybe try another title, mood, or activity?", style: AppTextStyles.bodyMedium, textAlign: TextAlign.center)
         ]
       ]
     );

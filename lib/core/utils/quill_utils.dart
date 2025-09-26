@@ -4,4 +4,5 @@ import "package:flutter_quill/quill_delta.dart";
 
 class QuillUtils {
   static String jsonToPlainText(String jsonString) => Document.fromDelta(Delta.fromJson(jsonDecode(jsonString))).toPlainText();
+  static Document jsonToDocument(String jsonString) => Document.fromJson(jsonDecode(jsonString));
 }
