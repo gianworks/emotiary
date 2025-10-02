@@ -23,9 +23,9 @@ class BottomAppBarItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 80,
+      width: 70,
       child: InkWell(
-        customBorder: const CircleBorder(),
+        borderRadius: BorderRadius.circular(24),
         onTap: () => onTap(index),
         child: Padding(
           padding: const EdgeInsets.all(4),

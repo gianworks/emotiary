@@ -59,11 +59,12 @@ class _MainScreenState extends State<MainScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 12,
         color: Colors.white,
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 16,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             BottomAppBarItem(
               index: 0,
@@ -81,7 +82,7 @@ class _MainScreenState extends State<MainScreen> {
               label: "Insights", 
               onTap: _setCurrentItemIndex
             ),
-            const SizedBox(width: 50),
+            const SizedBox(width: 70),
             BottomAppBarItem(
               index: 2,
               currentNavIndex: _currentItemIndex,

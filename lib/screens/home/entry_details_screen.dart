@@ -95,7 +95,8 @@ class EntryDetailsScreen extends StatelessWidget {
             children: entry.activities.entries.map(
               (activity) => Text("${activity.value} ${activity.key.toLowerCase()}", style: AppTextStyles.bodyLarge)
             ).toList()
-          )
+          ),
+          const SizedBox(height: 64),
         ]
       )
     );
