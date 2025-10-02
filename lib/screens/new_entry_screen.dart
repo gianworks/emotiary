@@ -11,7 +11,9 @@ import "package:emotiary/screens/new_entry/activity_selection_screen.dart";
 import "package:emotiary/screens/new_entry/entry_writing_screen.dart";
 
 class NewEntryScreen extends StatefulWidget {
-  const NewEntryScreen({super.key});
+  final Entry? entry;
+
+  const NewEntryScreen({super.key, this.entry});
 
   @override
   State<NewEntryScreen> createState() => _NewEntryScreenState();
@@ -47,26 +49,53 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
   }
 
   void _saveEntry() async {
-    final Entry newEntry = Entry(
-      date: _entryDate, 
-      mood: _entryMood, 
-      moodEmoji: _entryMoodEmoji,
-      activities: _entryActivities, 
-      titleJson: _entryTitleJson, 
-      textJson: _entryTextJson
-    );
-
-    await EntryRepository.add(newEntry);
+    if (widget.entry == null) {
+      final Entry newEntry = Entry(
+        date: _entryDate,
+        mood: _entryMood,
+        moodEmoji: _entryMoodEmoji,
+        activities: _entryActivities,
+        titleJson: _entryTitleJson,
+        textJson: _entryTextJson,
+      );
+      await EntryRepository.add(newEntry);
+      if (!mounted) return;
+      SnackBarHelper.show("Entry created successfully.", context);
+    } else {
+      widget.entry!
+        ..date = _entryDate
+        ..mood = _entryMood
+        ..moodEmoji = _entryMoodEmoji
+        ..activities = _entryActivities
+        ..titleJson = _entryTitleJson
+        ..textJson = _entryTextJson;
+      await widget.entry!.save();
+      if (!mounted) return;
+      SnackBarHelper.show("Entry updated successfully.", context);
+    }
 
     if (!mounted) return;
-    SnackBarHelper.show("Entry saved successfully.", context);
     Navigator.pop(context, true);
   }
 
   @override
   void initState() {
     super.initState();
-    _entryDate = DateTimeUtils.format(DateTime.now());
+    if (widget.entry != null) {
+      _entryDate = widget.entry!.date;
+      _entryMood = widget.entry!.mood;
+      _entryMoodEmoji = widget.entry!.moodEmoji;
+      _entryActivities = widget.entry!.activities;
+      _entryTitleJson = widget.entry!.titleJson;
+      _entryTextJson = widget.entry!.textJson;
+    } else {
+      _entryDate = DateTimeUtils.format(DateTime.now());
+      _entryActivities = {};
+      _entryMood = "";
+      _entryMoodEmoji = "";
+      _entryTitleJson = "";
+      _entryTextJson = "";
+    }
   }
 
   @override
@@ -79,6 +108,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
   Widget build(BuildContext context) {
     final List<Widget> screens = [
       MoodSelectionScreen(
+        existingMood: (widget.entry != null) ? _entryMood : null,
         onFinished: (String selectedMood, String selectedMoodEmoji) {
           _entryMood = selectedMood;
           _entryMoodEmoji = selectedMoodEmoji;
@@ -86,12 +116,15 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
         }
       ),
       ActivitySelectionScreen(
+        existingActivities: (widget.entry != null) ? _entryActivities : null,
         onFinished: (Map<String, String> selectedActivities) {
           _entryActivities = selectedActivities;
           _goToNextPage();
         },
       ),
       EntryWritingScreen(
+        entryTitleJson: (widget.entry != null) ? _entryTitleJson : null,
+        entryTextJson: (widget.entry != null) ? _entryTextJson : null,
         isKeyboardVisible: (MediaQuery.of(context).viewInsets.bottom > 0),
         onFinished: (String titleJson, String textJson) {
           _entryTitleJson = titleJson;

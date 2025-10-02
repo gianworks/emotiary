@@ -3,16 +3,21 @@ import "package:flutter/material.dart";
 import "package:flutter_quill/flutter_quill.dart";
 import "package:emotiary/core/theme/app_colors.dart";
 import "package:emotiary/core/theme/app_text_styles.dart";
+import "package:emotiary/core/utils/quill_utils.dart";
 import "package:emotiary/core/helpers/snack_bar_helper.dart";
 import "package:emotiary/core/helpers/text_block_style_helper.dart";
 import "package:emotiary/widgets/primary_button.dart";
 
 class EntryWritingScreen extends StatefulWidget {
+  final String? entryTitleJson;
+  final String? entryTextJson;
   final bool isKeyboardVisible;
   final Function(String titleJson, String textJson) onFinished;
 
   const EntryWritingScreen({
     super.key,
+    this.entryTitleJson,
+    this.entryTextJson,
     required this.isKeyboardVisible,
     required this.onFinished
   });
@@ -22,8 +27,8 @@ class EntryWritingScreen extends StatefulWidget {
 }
 
 class _EntryWritingScreenState extends State<EntryWritingScreen> with AutomaticKeepAliveClientMixin {
-  final QuillController _titleQuillController = QuillController.basic();
-  final QuillController _textQuillController = QuillController.basic();
+  late QuillController _titleQuillController;
+  late QuillController _textQuillController;
 
   final FocusNode _titleFocusNode = FocusNode();
   final FocusNode _textFocusNode = FocusNode();
@@ -34,6 +39,21 @@ class _EntryWritingScreenState extends State<EntryWritingScreen> with AutomaticK
   @override
   void initState() {
     super.initState();
+
+    _titleQuillController = (widget.entryTitleJson != null) 
+    ? QuillController(
+      document: QuillUtils.jsonToDocument(widget.entryTitleJson!),
+      selection: TextSelection.collapsed(offset: 0)
+    )
+    : QuillController.basic();
+
+    _textQuillController = (widget.entryTextJson != null) 
+    ? QuillController(
+      document: QuillUtils.jsonToDocument(widget.entryTextJson!),
+      selection: TextSelection.collapsed(offset: 0)
+    )
+    : QuillController.basic();
+
     _titleFocusNode.addListener(() => setState(() {}));
     _textFocusNode.addListener(() => setState(() {}));
   }

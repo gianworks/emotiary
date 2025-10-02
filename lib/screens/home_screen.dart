@@ -13,11 +13,13 @@ import "package:emotiary/widgets/primary_card.dart";
 class HomeScreen extends StatefulWidget {
   final List<Entry> entries;
   final Function(Entry entry) onDeleteEntry;
+  final Function(Entry entry) onEditEntry;
 
   const HomeScreen({
     super.key,
     required this.entries,
-    required this.onDeleteEntry
+    required this.onDeleteEntry,
+    required this.onEditEntry
   });
 
   @override
@@ -55,12 +57,16 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _groupEntriesByDate(filteredEntries));
   }
 
-  void _goToEntryDetailsScreen(Entry entry) => NavigationHelper.push(
-    EntryDetailsScreen(
-      entry: entry, 
-      onDeleteEntry: widget.onDeleteEntry
-    ), context
-  );
+  void _goToEntryDetailsScreen(Entry entry) {
+    NavigationHelper.push(
+      EntryDetailsScreen(
+        entry: entry, 
+        onDeleteEntry: widget.onDeleteEntry,
+        onEditEntry: widget.onEditEntry
+      ), 
+      context
+    );
+  }
 
   @override 
   void initState() {

@@ -6,10 +6,12 @@ import "package:emotiary/core/helpers/snack_bar_helper.dart";
 import "package:emotiary/widgets/primary_button.dart";
 
 class ActivitySelectionScreen extends StatefulWidget {
+  final Map<String, String>? existingActivities;
   final Function(Map<String, String> selectedActivities) onFinished;
 
   const ActivitySelectionScreen({
     super.key,
+    this.existingActivities,
     required this.onFinished
   });
 
@@ -33,13 +35,21 @@ class _ActivitySelectionScreenState extends State<ActivitySelectionScreen> with 
     "Other": "🎲"
   };
 
-  final Map<String, String> _selectedActivities = {};
+  Map<String, String> _selectedActivities = {};
 
   void _addActivity(MapEntry<String, String> activity) => setState(() => _selectedActivities.addEntries([activity]));
   void _removeActivity(MapEntry<String, String> activity) => setState(() => _selectedActivities.remove(activity.key));
 
   @override
   bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.existingActivities != null) {
+      _selectedActivities = widget.existingActivities!;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

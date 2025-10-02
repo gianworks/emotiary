@@ -4,10 +4,12 @@ import "package:emotiary/core/theme/app_text_styles.dart";
 import "package:emotiary/widgets/primary_button.dart";
 
 class MoodSelectionScreen extends StatefulWidget {
+  final String? existingMood;
   final Function(String selectedMood, String selectedMoodEmoji) onFinished;
 
   const MoodSelectionScreen({
     super.key,
+    this.existingMood,
     required this.onFinished
   });
 
@@ -36,6 +38,15 @@ class _MoodSelectionScreenState extends State<MoodSelectionScreen> with Automati
 
   @override
   bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.existingMood != null) {
+      _currentSliderValue = (_moods.keys.toList().indexOf(widget.existingMood!) + 1);
+      _selectedMood = _moods.entries.firstWhere((e) => e.key == widget.existingMood);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

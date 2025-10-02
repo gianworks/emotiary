@@ -27,6 +27,12 @@ class _MainScreenState extends State<MainScreen> {
     _updateEntries();
   }
 
+  void _editEntry(Entry entry) async {
+    final dynamic result = await NavigationHelper.push(NewEntryScreen(entry: entry), context);
+    if (result == null) return;
+    _updateEntries();
+  }
+
   void _goToNewEntryScreen() async {
     final dynamic result = await NavigationHelper.push(NewEntryScreen(), context);
     if (result == null) return;
@@ -41,6 +47,7 @@ class _MainScreenState extends State<MainScreen> {
       HomeScreen(
         entries: _entries,
         onDeleteEntry: _deleteEntry,
+        onEditEntry: _editEntry,
       ),
       SizedBox(),
       SizedBox(),

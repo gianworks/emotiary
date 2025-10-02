@@ -5,17 +5,19 @@ import "package:emotiary/data/models/entry.dart";
 import "package:emotiary/core/theme/app_colors.dart";
 import "package:emotiary/core/theme/app_text_styles.dart";
 import "package:emotiary/core/utils/quill_utils.dart";
-import "package:emotiary/core/helpers/text_block_style_helper.dart";
 import "package:emotiary/core/helpers/dialog_helper.dart";
+import "package:emotiary/core/helpers/text_block_style_helper.dart";
 
 class EntryDetailsScreen extends StatelessWidget {
   final Entry entry;
   final Function(Entry entry) onDeleteEntry;
+  final Function(Entry entry) onEditEntry;
 
   const EntryDetailsScreen({
     super.key,
     required this.entry,
-    required this.onDeleteEntry
+    required this.onDeleteEntry,
+    required this.onEditEntry
   });
 
   void _showDeleteDialog(BuildContext context) {
@@ -66,7 +68,10 @@ class EntryDetailsScreen extends StatelessWidget {
                   width: 52,
                   height: 52,
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      onEditEntry(entry);
+                    },
                     icon: const Icon(AntDesign.edit_outline, color: AppColors.darkBrown)
                   )
                 ),
