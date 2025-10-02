@@ -6,14 +6,30 @@ import "package:emotiary/core/theme/app_colors.dart";
 import "package:emotiary/core/theme/app_text_styles.dart";
 import "package:emotiary/core/utils/quill_utils.dart";
 import "package:emotiary/core/helpers/text_block_style_helper.dart";
+import "package:emotiary/core/helpers/dialog_helper.dart";
 
 class EntryDetailsScreen extends StatelessWidget {
   final Entry entry;
+  final Function(Entry entry) onDeleteEntry;
 
   const EntryDetailsScreen({
     super.key,
-    required this.entry
+    required this.entry,
+    required this.onDeleteEntry
   });
+
+  void _showDeleteDialog(BuildContext context) {
+    DialogHelper.show(
+      title: "Delete Entry", 
+      content: "Are you sure you want to delete this entry? This process cannot be undone.", 
+      confirmText: "Delete", 
+      onConfirm: () {
+        onDeleteEntry(entry);
+        Navigator.of(context).pop();
+      }, 
+      context: context
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,15 +62,23 @@ class EntryDetailsScreen extends StatelessWidget {
             padding: const EdgeInsetsGeometry.only(right: 16),
             child: Row(
               children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(AntDesign.edit_outline, color: AppColors.darkBrown)
+                SizedBox(
+                  width: 52,
+                  height: 52,
+                  child: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(AntDesign.edit_outline, color: AppColors.darkBrown)
+                  )
                 ),
                 const SizedBox(width: 4),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(AntDesign.delete_outline, color: AppColors.darkBrown)
-                )
+                SizedBox(
+                  width: 52,
+                  height: 52,
+                  child: IconButton(
+                    onPressed: () => _showDeleteDialog(context),
+                    icon: const Icon(AntDesign.delete_outline, color: AppColors.darkBrown)
+                  )
+                ),
               ]
             )
           )

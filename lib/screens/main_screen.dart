@@ -22,6 +22,11 @@ class _MainScreenState extends State<MainScreen> {
 
   void _updateEntries() => setState(() => _entries = EntryRepository.getAll());
 
+  void _deleteEntry(Entry entry) {
+    entry.delete();
+    _updateEntries();
+  }
+
   void _goToNewEntryScreen() async {
     final dynamic result = await NavigationHelper.push(NewEntryScreen(), context);
     if (result == null) return;
@@ -33,7 +38,10 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> screens = [
-      HomeScreen(entries: _entries),
+      HomeScreen(
+        entries: _entries,
+        onDeleteEntry: _deleteEntry,
+      ),
       SizedBox(),
       SizedBox(),
       SizedBox()
