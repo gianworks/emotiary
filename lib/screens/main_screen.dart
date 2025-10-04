@@ -7,6 +7,7 @@ import "package:emotiary/core/theme/app_text_styles.dart";
 import "package:emotiary/core/helpers/navigation_helper.dart";
 import "package:emotiary/screens/new_entry_screen.dart";
 import "package:emotiary/screens/home_screen.dart";
+import "package:emotiary/screens/insights_screen.dart";
 import "package:emotiary/widgets/bottom_app_bar_item.dart";
 
 class MainScreen extends StatefulWidget {
@@ -49,7 +50,9 @@ class _MainScreenState extends State<MainScreen> {
         onDeleteEntry: _deleteEntry,
         onEditEntry: _editEntry,
       ),
-      SizedBox(),
+      InsightsScreen(
+        entries: _entries
+      ),
       SizedBox(),
       SizedBox()
     ];

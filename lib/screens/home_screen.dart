@@ -96,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         const SizedBox(height: 32),
         Text("Journal Entries", style: AppTextStyles.headlineLarge),
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
         Text("You've written ${widget.entries.length} entries so far", style: AppTextStyles.bodyLarge),
         const SizedBox(height: 32),
         PrimarySearchBar(
@@ -108,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
           textStyle: TextStyle(fontSize: 16, color: AppColors.brownSugar, fontWeight: FontWeight.w500),
           onChanged: _filterEntries
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         if (widget.entries.isNotEmpty && _groupedEntries.isNotEmpty) ...[
           ListView.builder(
             shrinkWrap: true,
@@ -121,6 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(height: 16),
                   Text(DateTimeUtils.formateRelativeDate(date), style: AppTextStyles.titleSmall),
                   const SizedBox(height: 8),
                   ListView.builder(
@@ -133,6 +134,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       return PrimaryCard(
                         onTap: () => _goToEntryDetailsScreen(entry),
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        padding: const EdgeInsets.all(16),
                         content: Row(
                           children: [
                             const SizedBox(width: 8),
@@ -181,8 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                       );
                     }
-                  ),
-                  const SizedBox(height: 8)
+                  )
                 ]
               );
             }
