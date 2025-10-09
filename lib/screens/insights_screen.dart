@@ -46,13 +46,16 @@ class _InsightsScreenState extends State<InsightsScreen> {
   Iterable<Entry> _getEntriesThisWeek() => widget.entries.where((entry) => DateTimeUtils.isInCurrentWeek(DateTimeUtils.parse(entry.date)));
 
   String _getMostOccurredMood() {
-    if (widget.entries.isEmpty) return "";
+    final entriesThisWeek = _getEntriesThisWeek();
+    if (entriesThisWeek.isEmpty) return "";
 
     final Map<String, int> moodCount = {};
 
-    for (var entry in _getEntriesThisWeek()) {
+    for (var entry in entriesThisWeek) {
       moodCount[entry.mood] = (moodCount[entry.mood] ?? 0) + 1;
     }
+
+    if (moodCount.isEmpty) return "";
 
     String mostOccurredMood = moodCount.keys.first;
     int maxCount = moodCount[mostOccurredMood]!;
@@ -68,17 +71,20 @@ class _InsightsScreenState extends State<InsightsScreen> {
   }
 
   MapEntry<String, String>? _getMostOccurredActivity() {
-    if (widget.entries.isEmpty) return null;
+    final entriesThisWeek = _getEntriesThisWeek();
+    if (entriesThisWeek.isEmpty) return null;
 
     final Map<String, int> activityCount = {};
     final Map<String, String> activityEmoji = {};
 
-    for (var entry in _getEntriesThisWeek()) {
+    for (var entry in entriesThisWeek) {
       entry.activities.forEach((activityName, emoji) {
         activityCount[activityName] = (activityCount[activityName] ?? 0) + 1;
         activityEmoji[activityName] = emoji;
       });
     }
+
+    if (activityCount.isEmpty) return null;
 
     String mostOccurredActivity = activityCount.keys.first;
     int maxCount = activityCount[mostOccurredActivity]!;
