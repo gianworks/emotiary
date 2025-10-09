@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:icons_plus/icons_plus.dart";
+import "package:emotiary/data/repositories/username_repository.dart";
 import "package:emotiary/core/theme/app_colors.dart";
 import "package:emotiary/core/theme/app_text_styles.dart";
 import "package:emotiary/core/helpers/dialog_helper.dart";
@@ -7,10 +8,12 @@ import "package:emotiary/core/helpers/snack_bar_helper.dart";
 import "package:emotiary/widgets/primary_card.dart";
 
 class SettingsScreen extends StatefulWidget {
+  final Function(String) onSaveUsername;
   final Function() onDeleteAll;
 
   const SettingsScreen({
     super.key,
+    required this.onSaveUsername,
     required this.onDeleteAll
   });
 
@@ -19,6 +22,40 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  final TextEditingController _nameController = TextEditingController(text: UsernameRepository.getUsername());
+
+  void _showEditNameDialog() {
+    showDialog(
+      context: context, 
+      builder: (_) => AlertDialog(
+        title: const Text("Edit Name"),
+        content: TextField(
+          controller: _nameController,
+          decoration: const InputDecoration(
+            hintText: "Enter a name..",
+            border: OutlineInputBorder(),
+          )
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, "Cancel"),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () {
+              if (_nameController.text.isEmpty || _nameController.text.length > 10) return;
+
+              widget.onSaveUsername(_nameController.text);
+              Navigator.of(context).pop();
+              SnackBarHelper.show("Name updated successfully.", context);
+            },
+            child: const Text("Save")
+          )
+        ]
+      )
+    );
+  }
+
   void _showDeleteAllEntriesDialog() {
     DialogHelper.show(
       title: "Delete All Entries", 
@@ -30,6 +67,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }, 
       context: context
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _nameController.dispose();
   }
 
   @override
@@ -54,7 +97,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   focusColor: Colors.transparent,
                   selectedTileColor: Colors.transparent,
                   tileColor: Colors.transparent,
-                  onTap: () {},
+                  onTap: _showEditNameDialog
                 )
               ),
               SizedBox(
@@ -66,9 +109,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   focusColor: Colors.transparent,
                   selectedTileColor: Colors.transparent,
                   tileColor: Colors.transparent,
-                  onTap: _showDeleteAllEntriesDialog,
+                  onTap: _showDeleteAllEntriesDialog
                 )
-              ),
+              )
             ]
           )
         )

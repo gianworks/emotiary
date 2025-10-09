@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:emotiary/data/repositories/username_repository.dart";
 import "package:emotiary/core/theme/app_colors.dart";
 import "package:emotiary/core/theme/app_text_styles.dart";
 import "package:emotiary/widgets/primary_button.dart";
@@ -56,7 +57,7 @@ class _MoodSelectionScreenState extends State<MoodSelectionScreen> with Automati
       physics: const NeverScrollableScrollPhysics(),
       children: [
         const SizedBox(height: 48),
-        const Text("Hey user,\nhow are you feeling?", style: AppTextStyles.headlineLarge, textAlign: TextAlign.center),
+        Text("Hey ${UsernameRepository.getUsername()},\nhow are you feeling?", style: AppTextStyles.headlineLarge, textAlign: TextAlign.center),
         const SizedBox(height: 48),
         Text(_selectedMood.value, style: TextStyle(fontSize: 96), textAlign: TextAlign.center),
         Text("I'm feeling ${_selectedMood.key.toLowerCase()}", style: TextStyle(fontSize: 20, color: AppColors.darkBrown, fontWeight: FontWeight.w500), textAlign: TextAlign.center),

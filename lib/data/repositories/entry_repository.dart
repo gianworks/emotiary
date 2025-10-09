@@ -3,7 +3,7 @@ import "package:emotiary/data/models/entry.dart";
 import "package:emotiary/core/config/hive_config.dart";
 
 class EntryRepository {
-  static final Box<Entry> _box = Hive.box<Entry>(HiveConfig.entryBox);
+  static final Box<Entry> _box = Hive.box<Entry>(HiveConfig.entriesBox);
 
   static List<Entry> getAll() => _box.values.toList();
   static Future<void> add(Entry entry) async => await _box.add(entry);

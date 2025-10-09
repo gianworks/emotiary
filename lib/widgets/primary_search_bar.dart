@@ -3,6 +3,7 @@ import "package:emotiary/core/theme/app_colors.dart";
 
 class PrimarySearchBar extends StatelessWidget {
   final double height;
+  final TextEditingController? controller;
   final FocusNode focusNode;
   final Widget? leading;
   final String hintText;
@@ -13,6 +14,7 @@ class PrimarySearchBar extends StatelessWidget {
   const PrimarySearchBar({
     super.key,
     required this.height,
+    this.controller,
     required this.focusNode,
     this.leading,
     required this.hintText,
@@ -24,6 +26,7 @@ class PrimarySearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SearchBar(
+      controller: controller,
       focusNode: focusNode,
       constraints: BoxConstraints(minHeight: height),
       backgroundColor: WidgetStateProperty.all(Colors.white),

@@ -2,10 +2,12 @@ import "package:flutter/material.dart";
 import "package:icons_plus/icons_plus.dart";
 import "package:emotiary/data/models/entry.dart";
 import "package:emotiary/data/repositories/entry_repository.dart";
+import "package:emotiary/data/repositories/username_repository.dart";
 import "package:emotiary/core/theme/app_colors.dart";
 import "package:emotiary/core/theme/app_text_styles.dart";
 import "package:emotiary/core/helpers/navigation_helper.dart";
 import "package:emotiary/screens/new_entry_screen.dart";
+import "package:emotiary/screens/welcome_screen.dart";
 import "package:emotiary/screens/home_screen.dart";
 import "package:emotiary/screens/insights_screen.dart";
 import "package:emotiary/screens/settings_screen.dart";
@@ -21,6 +23,11 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentItemIndex = 0;
   List<Entry> _entries = EntryRepository.getAll();
+
+  void _saveUsername(String username) async {
+    await UsernameRepository.saveUsername(username);
+    setState(() {});
+  }
 
   void _updateEntries() => setState(() => _entries = EntryRepository.getAll());
 
@@ -61,11 +68,12 @@ class _MainScreenState extends State<MainScreen> {
       ),
       SizedBox(),
       SettingsScreen(
+        onSaveUsername: _saveUsername,
         onDeleteAll: _deleteAllEntries,
       )
     ];
 
-    return Scaffold(
+    return (UsernameRepository.hasUsername()) ? Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         forceMaterialTransparency: true,
@@ -128,6 +136,6 @@ class _MainScreenState extends State<MainScreen> {
           ]
         )
       )
-    );
+    ) : WelcomeScreen(onSaveUsername: _saveUsername);
   }
 }

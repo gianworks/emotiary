@@ -2,7 +2,8 @@ import "package:hive_flutter/hive_flutter.dart";
 import "package:emotiary/data/models/entry.dart";
 
 class HiveConfig {
-  static const String entryBox = "entries";
+  static const String usernameBox = "username";
+  static const String entriesBox = "entries";
 
   static Future<void> init() async {
     await Hive.initFlutter();
@@ -11,6 +12,7 @@ class HiveConfig {
     Hive.registerAdapter(EntryAdapter());
 
     // Open boxes
-    await Hive.openBox<Entry>(entryBox);
+    await Hive.openBox<String>(usernameBox);
+    await Hive.openBox<Entry>(entriesBox);
   }
 }
