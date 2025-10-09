@@ -7,4 +7,5 @@ class EntryRepository {
 
   static List<Entry> getAll() => _box.values.toList();
   static Future<void> add(Entry entry) async => await _box.add(entry);
+  static Future<void> deleteAll() async => await _box.clear();
 }

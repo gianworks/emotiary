@@ -8,6 +8,7 @@ import "package:emotiary/core/helpers/navigation_helper.dart";
 import "package:emotiary/screens/new_entry_screen.dart";
 import "package:emotiary/screens/home_screen.dart";
 import "package:emotiary/screens/insights_screen.dart";
+import "package:emotiary/screens/settings_screen.dart";
 import "package:emotiary/widgets/bottom_app_bar_item.dart";
 
 class MainScreen extends StatefulWidget {
@@ -25,6 +26,11 @@ class _MainScreenState extends State<MainScreen> {
 
   void _deleteEntry(Entry entry) {
     entry.delete();
+    _updateEntries();
+  }
+
+  void _deleteAllEntries() async {
+    await EntryRepository.deleteAll();
     _updateEntries();
   }
 
@@ -54,7 +60,9 @@ class _MainScreenState extends State<MainScreen> {
         entries: _entries
       ),
       SizedBox(),
-      SizedBox()
+      SettingsScreen(
+        onDeleteAll: _deleteAllEntries,
+      )
     ];
 
     return Scaffold(

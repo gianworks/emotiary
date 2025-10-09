@@ -7,6 +7,7 @@ import "package:emotiary/core/theme/app_text_styles.dart";
 import "package:emotiary/core/utils/quill_utils.dart";
 import "package:emotiary/core/helpers/dialog_helper.dart";
 import "package:emotiary/core/helpers/text_block_style_helper.dart";
+import "package:emotiary/core/helpers/snack_bar_helper.dart";
 
 class EntryDetailsScreen extends StatelessWidget {
   final Entry entry;
@@ -28,6 +29,7 @@ class EntryDetailsScreen extends StatelessWidget {
       onConfirm: () {
         onDeleteEntry(entry);
         Navigator.of(context).pop();
+        SnackBarHelper.show("Entry deleted successfully.", context);
       }, 
       context: context
     );
