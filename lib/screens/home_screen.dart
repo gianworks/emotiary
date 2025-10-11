@@ -100,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Text("You've written ${widget.entries.length} entries so far", style: AppTextStyles.bodyLarge),
         const SizedBox(height: 32),
         PrimarySearchBar(
-          height: 40, 
+          height: 48, 
           focusNode: _searchBarFocusNode,
           leading: Icon(AntDesign.search_outline, color: (_searchBarFocusNode.hasFocus) ? AppColors.brownSugar : AppColors.warmGray),
           hintText: "Search by title, mood, or activity..", 
