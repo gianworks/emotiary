@@ -3,6 +3,7 @@ import "package:icons_plus/icons_plus.dart";
 import "package:emotiary/data/models/entry.dart";
 import "package:emotiary/data/repositories/entry_repository.dart";
 import "package:emotiary/data/repositories/username_repository.dart";
+import "package:emotiary/services/openrouter_service.dart";
 import "package:emotiary/core/theme/app_colors.dart";
 import "package:emotiary/core/theme/app_text_styles.dart";
 import "package:emotiary/core/helpers/navigation_helper.dart";
@@ -10,6 +11,7 @@ import "package:emotiary/screens/new_entry_screen.dart";
 import "package:emotiary/screens/welcome_screen.dart";
 import "package:emotiary/screens/home_screen.dart";
 import "package:emotiary/screens/insights_screen.dart";
+import "package:emotiary/screens/reflection_screen.dart";
 import "package:emotiary/screens/settings_screen.dart";
 import "package:emotiary/widgets/bottom_app_bar_item.dart";
 
@@ -21,15 +23,20 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentItemIndex = 0;
   List<Entry> _entries = EntryRepository.getAll();
+  
+  int _currentItemIndex = 0;
+  String _reflectionText = "";
 
   void _saveUsername(String username) async {
     await UsernameRepository.saveUsername(username);
     setState(() {});
   }
 
-  void _updateEntries() => setState(() => _entries = EntryRepository.getAll());
+  void _updateEntries() {
+    setState(() => _entries = EntryRepository.getAll());
+    _generateReflection();
+  }
 
   void _deleteEntry(Entry entry) {
     entry.delete();
@@ -55,6 +62,23 @@ class _MainScreenState extends State<MainScreen> {
 
   void _setCurrentItemIndex(int index) => setState(() => _currentItemIndex = index);
 
+  Future<void> _generateReflection() async {
+    if (_entries.isEmpty) {
+      setState(() => _reflectionText = "No reflection available.");
+      return;
+    }
+
+    final prompt = buildReflectionPrompt(_entries);
+    final aiResponse = await getOpenRouterResponse(prompt);
+    setState(() => _reflectionText = aiResponse);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _generateReflection();
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> screens = [
@@ -66,7 +90,9 @@ class _MainScreenState extends State<MainScreen> {
       InsightsScreen(
         entries: _entries
       ),
-      SizedBox(),
+      ReflectionScreen(
+        reflectionText: _reflectionText,
+      ),
       SettingsScreen(
         onSaveUsername: _saveUsername,
         onDeleteAll: _deleteAllEntries,
@@ -87,6 +113,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       body: screens[_currentItemIndex],
       floatingActionButton: FloatingActionButton(
+        heroTag: null,
         shape: const CircleBorder(),
         onPressed: _goToNewEntryScreen,
         child: const Icon(AntDesign.edit_fill)
