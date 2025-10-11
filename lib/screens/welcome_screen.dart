@@ -56,6 +56,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Scaffold(
       body: PageView(
         controller: _pageController,
+        physics: NeverScrollableScrollPhysics(),
         children: [
           ListView(
             padding: const EdgeInsetsGeometry.symmetric(horizontal: 32),
