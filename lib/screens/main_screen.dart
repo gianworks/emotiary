@@ -1,3 +1,4 @@
+import "package:http/http.dart" as http;
 import "package:flutter/material.dart";
 import "package:icons_plus/icons_plus.dart";
 import "package:emotiary/data/models/entry.dart";
@@ -68,9 +69,21 @@ class _MainScreenState extends State<MainScreen> {
       return;
     }
 
-    final prompt = buildReflectionPrompt(_entries);
-    final aiResponse = await getOpenRouterResponse(prompt);
-    setState(() => _reflectionText = aiResponse);
+    try {
+      final prompt = buildReflectionPrompt(_entries);
+      final aiResponse = await getOpenRouterResponse(prompt);
+      setState(() => _reflectionText = aiResponse);
+    } 
+    on http.ClientException catch (_) {
+      setState(() => _reflectionText = "Sorry, it looks like there's a connection issue. Please try again.");
+    } 
+    on FormatException catch (_) {
+      setState(() => _reflectionText = "Sorry, we couldn't process the reflection response.");
+    } 
+    catch (error) {
+      debugPrint("Unexpected error: $error");
+      setState(() => _reflectionText = "Sorry, something went wrong while creating your reflection.");
+    }
   }
 
   @override

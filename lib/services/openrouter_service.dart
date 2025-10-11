@@ -22,7 +22,7 @@ String buildReflectionPrompt(List<Entry> entries) {
 
 Future<String> getOpenRouterResponse(String prompt) async {
   const endpoint = "https://openrouter.ai/api/v1/chat/completions";
-  const apiKey = "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";
+  const apiKey = "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";
 
   final headers = {
     "Authorization": "Bearer $apiKey",
